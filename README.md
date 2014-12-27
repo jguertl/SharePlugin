@@ -13,9 +13,6 @@ Xamarin.Forms.Init();
 ShareImplementation.Init();
 ```
 
-#### Usage
-
-
 #### Contributors
 * [jguertl](https://github.com/jguertl)
 
