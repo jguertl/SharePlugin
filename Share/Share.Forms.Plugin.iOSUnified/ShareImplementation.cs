@@ -3,8 +3,14 @@ using System;
 using System.Linq;
 using Xamarin.Forms;
 using Share.Forms.Plugin.iOS;
-using MonoTouch.UIKit;
+#if __UNIFIED__
+using Foundation;
+using UIKit;
+#else
 using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+#endif
+
 
 [assembly: Dependency(typeof(ShareImplementation))]
 namespace Share.Forms.Plugin.iOS
@@ -29,12 +35,12 @@ namespace Share.Forms.Plugin.iOS
 		private void ShowActionSheet(string status, string title = "", string link = "")
 		{
       link = link.Trim();
-		  if (!string.IsNullOrWhiteSpace(link))
-		  {
-		    var tempUri = new Uri(link);
-		    link = tempUri.GetLeftPart(UriPartial.Authority) + System.Web.HttpUtility.UrlPathEncode(tempUri.PathAndQuery);
-		  }
-		  var shareitem = new NSObject[] { new NSString(title), new NSUrl(link) };
+      if (!string.IsNullOrWhiteSpace(link))
+      {
+        var tempUri = new Uri(link);
+        link = tempUri.GetLeftPart(UriPartial.Authority) + System.Web.HttpUtility.UrlPathEncode(tempUri.PathAndQuery);
+      }
+      var shareitem = new NSObject[] { new NSString(title), new NSUrl(link) };
       var activityController = new UIActivityViewController(shareitem, null);
 
       activityController.SetValueForKey(new NSObject[] { new NSString(status) }.FirstOrDefault(), new NSString("subject"));

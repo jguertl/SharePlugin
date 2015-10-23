@@ -15,6 +15,7 @@ ShareImplementation.Init();
 
 #### Contributors
 * [jguertl](https://github.com/jguertl)
+* [bencrispin](https://github.com/bencrispin)
 
 #### License
 Licensed under MIT license
