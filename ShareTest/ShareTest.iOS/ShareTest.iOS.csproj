@@ -11,7 +11,7 @@
     <RootNamespace>ShareTest.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>ShareTestiOS</AssemblyName>
-    <NuGetPackageImportStamp>1e5c17ec</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>4682b0f5</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -94,6 +94,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork@2x" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Share\Share.Plugin.Abstractions\Share.Plugin.Abstractions.csproj">

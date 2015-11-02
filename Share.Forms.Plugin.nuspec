@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>Share.Plugin.Xamarin.Forms</id>
-       <version>2.0.0</version>
+       <version>2.0.0-alpha1</version>
        <title>Share Plugin for Xamarin and Windows</title>
        <authors>Jakob Gürtl,James Montemagno</authors>
        <owners>Jakob Gürtl,JamesMontemagno</owners>
-       <licenseUrl>https://github.com/jguertl/SharePlugin/blob/master/LICENSE.md</licenseUrl>
-       
-	<projectUrl>https://github.com/jguertl/SharePlugin</projectUrl>
+     <iconUrl>http://refractored.com/images/plugin_share.png</iconUrl>
+     <licenseUrl>https://github.com/jguertl/SharePlugin/blob/master/LICENSE.md</licenseUrl>
+	     <projectUrl>https://github.com/jguertl/SharePlugin</projectUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
        <description>
          Share Plugin for Xamarin and Windows to share text, link, or open a browser.
