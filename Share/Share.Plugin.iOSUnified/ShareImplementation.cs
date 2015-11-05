@@ -16,6 +16,11 @@ namespace Share.Plugin
         {
             var test = DateTime.UtcNow;
         }
+        /// <summary>
+        /// Open a browser to a specific url
+        /// </summary>
+        /// <param name="url">Url to open</param>
+        /// <returns>awaitable Task</returns>
         public async Task OpenBrowser(string url)
         {
             try
@@ -28,7 +33,12 @@ namespace Share.Plugin
             }
 
         }
-
+        /// <summary>
+        /// Simply share text on compatible services
+        /// </summary>
+        /// <param name="text">Text to share</param>
+        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
             try
@@ -52,6 +62,13 @@ namespace Share.Plugin
             }
         }
 
+        /// <summary>
+        /// Share a link url with compatible services
+        /// </summary>
+        /// <param name="url">Link to share</param>
+        /// <param name="message">Message to share</param>
+        /// <param name="title">Title of the popup</param>
+        /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null)
         {
             try
@@ -75,6 +92,5 @@ namespace Share.Plugin
             }
         }
        
-		
     }
 }
