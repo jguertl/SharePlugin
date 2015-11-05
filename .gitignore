@@ -33,6 +33,7 @@ TestResult.xml
 [Dd]ebugPS/
 [Rr]eleasePS/
 dlldata.c
+.nuget/
 
 *_i.c
 *_p.c
