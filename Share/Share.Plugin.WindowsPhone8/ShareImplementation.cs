@@ -1,11 +1,11 @@
 using Microsoft.Phone.Tasks;
-using Share.Plugin.Abstractions;
+using Plugin.Share.Abstractions;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Share.Plugin
+namespace Plugin.Share
 {
     /// <summary>
     /// Implementation for Share

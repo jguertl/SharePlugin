@@ -1,11 +1,11 @@
 using Foundation;
-using Share.Plugin.Abstractions;
+using Plugin.Share.Abstractions;
 using Social;
 using System;
 using System.Threading.Tasks;
 using UIKit;
 
-namespace Share.Plugin
+namespace Plugin.Share
 {
     /// <summary>
     /// Implementation for Share

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Share.Plugin.Abstractions
+namespace Plugin.Share.Abstractions
 {
     /// <summary>
     /// Interface for Share

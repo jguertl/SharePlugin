@@ -1,7 +1,7 @@
-﻿using Share.Plugin.Abstractions;
+﻿using Plugin.Share.Abstractions;
 using System;
 
-namespace Share.Plugin
+namespace Plugin.Share
 {
   /// <summary>
   /// Cross platform Share implemenations

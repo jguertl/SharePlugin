@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Share.Plugin;
+using Plugin.Share;
 
 namespace ShareTest.WinPhone
 {

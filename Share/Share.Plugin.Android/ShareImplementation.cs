@@ -1,9 +1,9 @@
 using Android.Content;
-using Share.Plugin.Abstractions;
+using Plugin.Share.Abstractions;
 using System;
 using System.Threading.Tasks;
 
-namespace Share.Plugin
+namespace Plugin.Share
 {
   /// <summary>
   /// Implementation for Feature

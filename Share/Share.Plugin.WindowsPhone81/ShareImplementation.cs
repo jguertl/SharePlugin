@@ -1,11 +1,11 @@
-using Share.Plugin.Abstractions;
+using Plugin.Share.Abstractions;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 
-namespace Share.Plugin
+namespace Plugin.Share
 {
     /// <summary>
     /// Implementation for Share
@@ -44,7 +44,7 @@ namespace Share.Plugin
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
-            ShareLink(text, title, null);
+            await ShareLink(text, title, null);
         }
         /// <summary>
         /// Share a link url with compatible services
@@ -55,8 +55,8 @@ namespace Share.Plugin
         /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null)
         {
-            this.text = text;
-            this.title = title;
+            this.text = message ?? string.Empty;
+            this.title = title ?? string.Empty;
             this.url = url;
             if (dataTransferManager == null)
             {
@@ -77,7 +77,11 @@ namespace Share.Plugin
                 if (url != null)
                 {
                     request.Data.Properties.ContentSourceWebLink = new Uri(url);
+#if WINDOWS_UWP
+                    request.Data.SetWebLink(new Uri(url));
+#else
                     request.Data.SetUri(new Uri(url));
+#endif
                 }
                 request.Data.SetText(title ?? string.Empty);
             }
