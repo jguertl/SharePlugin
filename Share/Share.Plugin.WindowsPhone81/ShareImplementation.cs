@@ -72,18 +72,22 @@ namespace Plugin.Share
             {
                 DataRequest request = e.Request;
                 // The Title is mandatory
-                request.Data.Properties.Title = title ?? string.Empty;
-                request.Data.Properties.Description = text ?? string.Empty;
-                if (url != null)
-                {
-                    request.Data.Properties.ContentSourceWebLink = new Uri(url);
 #if WINDOWS_UWP
-                    request.Data.SetWebLink(new Uri(url));
+                request.Data.Properties.Title = title ?? Windows.ApplicationModel.Package.Current.DisplayName;
+#elif WINDOWS_APP
+                request.Data.Properties.Title = title ?? Windows.ApplicationModel.Package.Current.DisplayName;
 #else
-                    request.Data.SetUri(new Uri(url));
+                request.Data.Properties.Title = title ?? string.Empty;
+
 #endif
+
+                if (!string.IsNullOrWhiteSpace(url))
+                {
+                  
+                    request.Data.SetWebLink(new Uri(url));
+
                 }
-                request.Data.SetText(title ?? string.Empty);
+                request.Data.SetText(text ?? string.Empty);
             }
             catch(Exception ex)
             {

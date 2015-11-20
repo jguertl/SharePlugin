@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>Share.Plugin.Xamarin.Forms</id>
-       <version>3.0.0</version>
+       <version>3.0.1</version>
        <title>Share Plugin for Xamarin and Windows</title>
        <authors>Jakob Gürtl,James Montemagno</authors>
        <owners>Jakob Gürtl,JamesMontemagno</owners>
@@ -16,7 +16,7 @@
            Share Plugin for Xamarin and Windows to share text, link, or open a browser.
        </description>
        <dependencies>
-           <dependency id="Plugin.Share" version="3.0.0" />
+           <dependency id="Plugin.Share" version="3.0.1" />
        </dependencies>
        <summary>
            Deprecated: Please upgrade to https://www.nuget.org/packages/Plugin.Share

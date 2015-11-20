@@ -2,7 +2,7 @@
 
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US"/>
-  <App xmlns="" ProductID="{0e964ecb-0d20-48ab-9a09-8b11de855bab}" Title="ShareTest.WinPhone" RuntimeType="Silverlight" Version="3.0.0" Genre="apps.normal"  Author="ShareTest.WinPhone author" Description="Sample description" Publisher="ShareTest.WinPhone" PublisherID="{311f799d-6fa5-45c3-a5b6-e0dd38916bff}">
+  <App xmlns="" ProductID="{0e964ecb-0d20-48ab-9a09-8b11de855bab}" Title="ShareTest.WinPhone" RuntimeType="Silverlight" Version="3.0.1" Genre="apps.normal"  Author="ShareTest.WinPhone author" Description="Sample description" Publisher="ShareTest.WinPhone" PublisherID="{311f799d-6fa5-45c3-a5b6-e0dd38916bff}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING"/>
