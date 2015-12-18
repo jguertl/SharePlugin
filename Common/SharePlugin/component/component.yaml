@@ -1,0 +1,34 @@
+%YAML 1.2
+---
+summary: Easily share text, links, or open a browse from shared code.
+getting-started: GettingStarted.md
+details: Details.md
+license: License.md
+icons: 
+  - SharePlugin_128x128.png
+  - SharePlugin_512x512.png
+publisher: James Montemagno
+name: Share Plugin
+id: SharePlugin
+samples: 
+  - name: "iOS Sample"
+    path: ../samples/ShareSample.sln
+    nobuild: true
+  - name: "Android Sample"
+    path: ../samples/ShareSample.sln
+    nobuild: true
+  - name: "WindowsPhone Sample"
+    path: ../samples/ShareSample.sln
+    nobuild: true
+publisher-url: https://github.com/jguertl/SharePlugin
+is_shell: true
+packages:
+  mobile: Plugin.Share, Version=3.0.1
+  ios: Plugin.Share, Version=3.0.1
+  ios-unified: Plugin.Share, Version=3.0.1
+  android: Plugin.Share, Version=3.0.1
+  winphone-8.0: Plugin.Share, Version=3.0.1
+  winphone-8.1: Plugin.Share, Version=3.0.1
+  winuniversal-10.0: Plugin.Share, Version=3.0.1
+version: 3.0.1
+...
