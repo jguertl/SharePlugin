@@ -3,7 +3,7 @@
 Simple way to share a message or link on a social network in any Xamarin or Windows Project
 
 #### Setup
-* Available on NuGet: https://www.nuget.org/packages/Share.Plugin.Xamarin.Forms/
+* Available on NuGet: https://www.nuget.org/packages/Plugin.Share
 * Install into your PCL project and Platform Specific projects
 
 **Supports**
