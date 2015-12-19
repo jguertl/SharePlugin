@@ -12,6 +12,7 @@ Simple way to share a message or link on a social network in any Xamarin or Wind
 * Windows Phone 8/8.1 (Silverlight)
 * Windows Phone 8.1 RT
 * Windows Store 8.1 RT
+* Windows 10 UWP
 
 ### API Usage
 
