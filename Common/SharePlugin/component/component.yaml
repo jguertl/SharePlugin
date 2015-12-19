@@ -11,15 +11,9 @@ publisher: James Montemagno
 name: Share Plugin
 id: SharePlugin
 samples: 
-  - name: "iOS Sample"
-    path: ../samples/ShareSample.sln
-    nobuild: true
-  - name: "Android Sample"
-    path: ../samples/ShareSample.sln
-    nobuild: true
-  - name: "WindowsPhone Sample"
-    path: ../samples/ShareSample.sln
-    nobuild: true
+  iOS Sample: ../samples/ShareSample.sln
+  Android Sample: ../samples/ShareSample.sln
+  WindowsPhone Sample: ../samples/ShareSample.sln
 publisher-url: https://github.com/jguertl/SharePlugin
 is_shell: true
 packages:
@@ -29,6 +23,5 @@ packages:
   android: Plugin.Share, Version=3.0.1
   winphone-8.0: Plugin.Share, Version=3.0.1
   winphone-8.1: Plugin.Share, Version=3.0.1
-  winuniversal-10.0: Plugin.Share, Version=3.0.1
 version: 3.0.1
 ...
