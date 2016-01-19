@@ -1,0 +1,19 @@
+﻿<Properties StartupItem="ShareTest/ShareTest.iOS/ShareTest.iOS.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.R32D702YDWM" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ShareTest/ShareTest.Droid/Properties/AndroidManifest.xml">
+    <Files>
+      <File FileName="Share/Share.Plugin.Android/ShareImplementation.cs" Line="67" Column="12" />
+      <File FileName="Share/Share.Plugin.iOSUnified/ShareImplementation.cs" Line="69" Column="56" />
+      <File FileName="Share/Share.Plugin.Abstractions/IShare.cs" Line="26" Column="3" />
+      <File FileName="ShareTest/ShareTest.Droid/Properties/AndroidManifest.xml" Line="7" Column="12" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/nielscup/Documents/Projects/SharePlugin/Share/Share.Plugin.Android/ShareImplementation.cs" line="69" column="1" />
+      <Breakpoint file="/Users/nielscup/Documents/Projects/SharePlugin/Share/Share.Plugin.Android/ShareImplementation.cs" line="94" column="1" />
+      <Breakpoint file="/Users/nielscup/Documents/Projects/SharePlugin/Share/Share.Plugin.Android/ShareImplementation.cs" line="98" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

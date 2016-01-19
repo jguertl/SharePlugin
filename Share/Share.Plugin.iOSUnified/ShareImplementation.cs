@@ -1,7 +1,9 @@
+using CoreGraphics;
 using Foundation;
 using Plugin.Share.Abstractions;
 using Social;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using UIKit;
 
@@ -12,6 +14,10 @@ namespace Plugin.Share
     /// </summary>
     public class ShareImplementation : IShare
     {
+        public object File { get; private set; }
+		public event EventHandler ShareCompleted;
+		public event EventHandler ShareError;
+
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -60,6 +66,44 @@ namespace Plugin.Share
             {
                 Console.WriteLine("Unable to share text" + ex.Message);
             }
+        }
+
+		public async Task ShareLocalFile(string localFilePath, string title = "")
+        {
+            var _openInWindow = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(localFilePath.Trim()));
+            _openInWindow.PresentOpenInMenu(new CGRect(0, 260, 320, 320), UIApplication.SharedApplication.KeyWindow.RootViewController.View, false);
+
+			if (ShareCompleted != null)
+				ShareCompleted (this, null);
+        }
+
+		public async Task ShareExternalFile(string fileUri, string fileName)
+        {
+            var uri = new System.Uri(fileUri);
+
+            var webClient = new WebClient();
+            webClient.DownloadDataCompleted += (s, e) => {
+
+				if(e.Error != null)
+				{
+					if(ShareError != null)
+						ShareError(s, e);
+
+					if (ShareCompleted != null)
+						ShareCompleted (this, null);
+					
+					return;
+				}
+
+                var bytes = e.Result; // get the downloaded data
+                string localFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                string localPath = System.IO.Path.Combine(localFolder, fileName);
+                System.IO.File.WriteAllBytes(localPath, bytes); // write to local storage
+
+                ShareLocalFile(localPath);
+            };
+
+            webClient.DownloadDataAsync(uri);
         }
 
         /// <summary>

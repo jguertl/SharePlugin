@@ -16,7 +16,7 @@ namespace ShareTest
             {
                 Text = "Share some text"
             };
-
+                        
             var button1 = new Button
             {
                 Text = "Share a link"
@@ -25,6 +25,11 @@ namespace ShareTest
             var button2 = new Button
             {
                 Text = "Open browser"
+            };
+
+            var button3 = new Button
+            {
+                Text = "Share file"
             };
 
             button.Clicked += (sender, args) =>
@@ -42,6 +47,25 @@ namespace ShareTest
                 CrossShare.Current.OpenBrowser("http://motzcod.es");
             };
 
+            button3.Clicked += (sender, args) =>
+            {
+				var fileUri = "https://developer.xamarin.com/recipes/android/data/adapters/offline123.pdf";
+				var fileName = "offline.pdf";
+
+//				var fileUri = "https://xamarin.com/content/images/pages/branding/assets/xamagon.png";
+//				var fileName = "xamagon.png";
+
+                CrossShare.Current.ShareExternalFile(fileUri, fileName);                              
+            };
+
+			CrossShare.Current.ShareCompleted += (s, e) => {
+				// Do something like cancel busy indicator
+			};
+
+			CrossShare.Current.ShareError += (s, e) => {
+				// handel error
+			};
+
             // The root page of your application
             MainPage = new ContentPage
             {
@@ -52,13 +76,13 @@ namespace ShareTest
                         new Label {
                             XAlign = TextAlignment.Center,
                             Text = "Welcome to Share Plugin Sample!"
-                        }, button, button1, button2
+                        }, button, button1, button2, button3
 
                     }
                 }
             };
         }
-
+                
         protected override void OnStart()
         {
             // Handle when your app starts

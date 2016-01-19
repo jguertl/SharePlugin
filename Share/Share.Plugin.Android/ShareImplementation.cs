@@ -1,7 +1,12 @@
+using Android.App;
 using Android.Content;
+using Android.Database;
+using Android.Graphics;
 using Plugin.Share.Abstractions;
 using System;
 using System.Threading.Tasks;
+using System.Net;
+using System.IO;
 
 namespace Plugin.Share
 {
@@ -55,6 +60,47 @@ namespace Plugin.Share
             chooserIntent.SetFlags(ActivityFlags.NewTask);
             Android.App.Application.Context.StartActivity(chooserIntent);
         }
+
+		public async Task ShareLocalFile (string localFilePath, string title = "")
+		{
+			if (string.IsNullOrEmpty (localFilePath))
+				return;
+
+			var fileUri = Android.Net.Uri.Parse (localFilePath);
+				
+			var intent = new Intent ();
+			intent.SetFlags(ActivityFlags.ClearTop);
+			intent.SetFlags(ActivityFlags.NewTask);
+			intent.SetAction (Intent.ActionSend);
+			intent.SetType ("*/*");
+			intent.PutExtra (Intent.ExtraStream, fileUri);
+			intent.AddFlags (ActivityFlags.GrantReadUriPermission);
+
+			var chooserIntent = Intent.CreateChooser(intent, title);
+			chooserIntent.SetFlags(ActivityFlags.ClearTop);
+			chooserIntent.SetFlags(ActivityFlags.NewTask);
+			Android.App.Application.Context.StartActivity (chooserIntent);
+		}
+
+		public async Task ShareExternalFile(string fileUri, string fileName)
+		{
+			var uri = new System.Uri(fileUri);
+
+			var webClient = new WebClient();
+			webClient.DownloadDataCompleted += (s, e) => {
+
+				if(e.Error != null)
+					return;
+				
+				var bytes = e.Result; // get the downloaded data
+				var localFolder = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+				string localPath = System.IO.Path.Combine (localFolder, fileName);
+				File.WriteAllBytes (localPath, bytes); // write to local storage
+				ShareLocalFile(string.Format($"file://{localFolder}/{fileName}"), "Test Android");
+			};
+
+			webClient.DownloadDataAsync(uri);
+		}
 
         /// <summary>
         /// Share a link url with compatible services

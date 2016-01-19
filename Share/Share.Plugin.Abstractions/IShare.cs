@@ -8,6 +8,9 @@ namespace Plugin.Share.Abstractions
     /// </summary>
     public interface IShare
     {
+		event EventHandler ShareCompleted;
+		event EventHandler ShareError;
+
         /// <summary>
         /// Simply share text on compatible services
         /// </summary>
@@ -15,7 +18,23 @@ namespace Plugin.Share.Abstractions
         /// <param name="title">Title of popup on share (not included in message)</param>
         /// <returns>awaitable Task</returns>
         Task Share(string text, string title = null);
-        
+
+        /// <summary>
+        /// Simply share a local file on compatible services
+        /// </summary>
+		/// <param name="localFilePath">path to local file</param>
+        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <returns>awaitable Task</returns>
+		Task ShareLocalFile(string localFilePath, string title = "");
+
+		/// <summary>
+		/// Simply share a file from an external resource on compatible services
+		/// </summary>
+		/// <param name="fileUri">uir to external file</param>
+		/// <param name="fileName">name of the file</param>
+		/// <returns>awaitable Task</returns>
+        Task ShareExternalFile(string fileUri, string fileName);
+
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
