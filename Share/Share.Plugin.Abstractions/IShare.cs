@@ -30,13 +30,13 @@ namespace Plugin.Share.Abstractions
 		Task ShareLocalFile(string localFilePath, string title = "");
 
         /// <summary>
-        /// Simply share a file from an external resource on compatible services
+        /// Simply share a file from a remote resource on compatible services
         /// </summary>
         /// <param name="fileUri">uir to external file</param>
         /// <param name="fileName">name of the file</param>
         /// <param name="title">Title of popup on share (not included in message)</param>
         /// <returns>awaitable bool</returns>
-        Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "");
+        Task<bool> ShareRemoteFile(string fileUri, string fileName, string title = "");
 
         /// <summary>
         /// Open a browser to a specific url

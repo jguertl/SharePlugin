@@ -88,7 +88,7 @@ namespace Plugin.Share
             throw new NotImplementedException();
         }
 
-        public Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "")
+        public Task<bool> ShareRemoteFile(string fileUri, string fileName, string title = "")
         {
             throw new NotImplementedException();
         }

@@ -59,7 +59,7 @@ namespace ShareTest
 
 				messageLabel.Text = string.Format("Downloading {0}, please wait...", fileName);
 
-				if(await CrossShare.Current.ShareExternalFile(fileUri, fileName))
+				if(await CrossShare.Current.ShareRemoteFile(fileUri, fileName))
 					messageLabel.Text = "";
             };
 
