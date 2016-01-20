@@ -99,7 +99,7 @@ namespace Plugin.Share
 		/// <param name="fileUri">uir to external file</param>
 		/// <param name="fileName">name of the file</param>
 		/// <param name="title">Title of popup on share (not included in message)</param>
-		/// <returns>awaitable Task<bool></returns>
+		/// <returns>awaitable bool</returns>
 		public async Task<bool> ShareExternalFile(string fileUri, string fileName,string title = "")
 		{			
 			try {

@@ -80,14 +80,14 @@ namespace Plugin.Share
             _openInWindow.PresentOpenInMenu(new CGRect(0, 260, 320, 320), UIApplication.SharedApplication.KeyWindow.RootViewController.View, false);
         }
 
-		/// <summary>
-		/// Simply share a file from an external resource on compatible services
-		/// </summary>
-		/// <param name="fileUri">uir to external file</param>
-		/// <param name="fileName">name of the file</param>
-		/// <param name="title">Title of popup on share (not included in message)</param>
-		/// <returns>awaitable Task<bool></returns>
-		public async Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "")
+        /// <summary>
+        /// Simply share a file from an external resource on compatible services
+        /// </summary>
+        /// <param name="fileUri">uir to external file</param>
+        /// <param name="fileName">name of the file</param>
+        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <returns>awaitable bool</returns>
+        public async Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "")
         { 	
 			try {
 				using (var webClient = new WebClient ()) 

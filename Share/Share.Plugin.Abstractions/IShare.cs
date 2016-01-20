@@ -29,14 +29,14 @@ namespace Plugin.Share.Abstractions
         /// <returns>awaitable Task</returns>
 		Task ShareLocalFile(string localFilePath, string title = "");
 
-		/// <summary>
-		/// Simply share a file from an external resource on compatible services
-		/// </summary>
-		/// <param name="fileUri">uir to external file</param>
-		/// <param name="fileName">name of the file</param>
-		/// <param name="title">Title of popup on share (not included in message)</param>
-		/// <returns>awaitable Task<bool></returns>
-		Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "");
+        /// <summary>
+        /// Simply share a file from an external resource on compatible services
+        /// </summary>
+        /// <param name="fileUri">uir to external file</param>
+        /// <param name="fileName">name of the file</param>
+        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <returns>awaitable bool</returns>
+        Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "");
 
         /// <summary>
         /// Open a browser to a specific url
