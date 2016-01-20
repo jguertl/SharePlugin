@@ -15,8 +15,7 @@ namespace Plugin.Share
     public class ShareImplementation : IShare
     {
         public object File { get; private set; }
-		public event EventHandler ShareCompleted;
-		public event EventHandler ShareError;
+		public event EventHandler<ShareErrorEventArgs> ShareError;
 
         public static async Task Init()
         {
@@ -39,6 +38,7 @@ namespace Plugin.Share
             }
 
         }
+
         /// <summary>
         /// Simply share text on compatible services
         /// </summary>
@@ -68,43 +68,58 @@ namespace Plugin.Share
             }
         }
 
+		/// <summary>
+		/// Simply share a local file on compatible services
+		/// </summary>
+		/// <param name="localFilePath">path to local file</param>
+		/// <param name="title">Title of popup on share (not included in message)</param>
+		/// <returns>awaitable Task</returns>
 		public async Task ShareLocalFile(string localFilePath, string title = "")
         {
             var _openInWindow = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(localFilePath.Trim()));
             _openInWindow.PresentOpenInMenu(new CGRect(0, 260, 320, 320), UIApplication.SharedApplication.KeyWindow.RootViewController.View, false);
-
-			if (ShareCompleted != null)
-				ShareCompleted (this, null);
         }
 
-		public async Task ShareExternalFile(string fileUri, string fileName)
-        {
-            var uri = new System.Uri(fileUri);
-
-            var webClient = new WebClient();
-            webClient.DownloadDataCompleted += (s, e) => {
-
-				if(e.Error != null)
+		/// <summary>
+		/// Simply share a file from an external resource on compatible services
+		/// </summary>
+		/// <param name="fileUri">uir to external file</param>
+		/// <param name="fileName">name of the file</param>
+		/// <param name="title">Title of popup on share (not included in message)</param>
+		/// <returns>awaitable Task<bool></returns>
+		public async Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "")
+        { 	
+			try {
+				using (var webClient = new WebClient ()) 
 				{
-					if(ShareError != null)
-						ShareError(s, e);
-
-					if (ShareCompleted != null)
-						ShareCompleted (this, null);
-					
-					return;
+					var uri = new System.Uri(fileUri);
+					var bytes = await webClient.DownloadDataTaskAsync (uri);
+					var filePath = WriteFile (fileName, bytes);
+					await ShareLocalFile (filePath, title);
+					return true;				
 				}
+			} catch (Exception ex) {
+				if (ShareError != null)
+					ShareError (this, new ShareErrorEventArgs{ Exception = ex });
 
-                var bytes = e.Result; // get the downloaded data
-                string localFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-                string localPath = System.IO.Path.Combine(localFolder, fileName);
-                System.IO.File.WriteAllBytes(localPath, bytes); // write to local storage
+				return false;			
+			}
+		}
 
-                ShareLocalFile(localPath);
-            };
+		/// <summary>
+		/// Writes the file to local storage.
+		/// </summary>
+		/// <returns>The file.</returns>
+		/// <param name="fileName">File name.</param>
+		/// <param name="bytes">Bytes.</param>
+		private string WriteFile(string fileName, byte[] bytes)
+		{			
+			string localFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+			string localPath = System.IO.Path.Combine(localFolder, fileName);
+			System.IO.File.WriteAllBytes(localPath, bytes); // write to local storage
 
-            webClient.DownloadDataAsync(uri);
-        }
+			return localPath;
+		}
 
         /// <summary>
         /// Share a link url with compatible services

@@ -15,6 +15,11 @@ namespace Plugin.Share
   /// </summary>
   public class ShareImplementation : IShare
   {
+		/// <summary>
+		/// Raised when a sharing error occurs.
+		/// </summary>
+		public event EventHandler<ShareErrorEventArgs> ShareError;
+
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -61,6 +66,12 @@ namespace Plugin.Share
             Android.App.Application.Context.StartActivity(chooserIntent);
         }
 
+		/// <summary>
+		/// Simply share a local file on compatible services
+		/// </summary>
+		/// <param name="localFilePath">path to local file</param>
+		/// <param name="title">Title of popup on share (not included in message)</param>
+		/// <returns>awaitable Task</returns>
 		public async Task ShareLocalFile (string localFilePath, string title = "")
 		{
 			if (string.IsNullOrEmpty (localFilePath))
@@ -82,24 +93,44 @@ namespace Plugin.Share
 			Android.App.Application.Context.StartActivity (chooserIntent);
 		}
 
-		public async Task ShareExternalFile(string fileUri, string fileName)
-		{
-			var uri = new System.Uri(fileUri);
+		/// <summary>
+		/// Simply share a file from an external resource on compatible services
+		/// </summary>
+		/// <param name="fileUri">uir to external file</param>
+		/// <param name="fileName">name of the file</param>
+		/// <param name="title">Title of popup on share (not included in message)</param>
+		/// <returns>awaitable Task<bool></returns>
+		public async Task<bool> ShareExternalFile(string fileUri, string fileName,string title = "")
+		{			
+			try {
+				using (var webClient = new WebClient ()) {
+					var uri = new System.Uri(fileUri);
+					var bytes = await webClient.DownloadDataTaskAsync (uri);
+					var filePath = WriteFile (fileName, bytes);
+					await ShareLocalFile (filePath, title);
+					return true;
+				}
+			} catch (Exception ex) {
+				if (ShareError != null)
+					ShareError (this, new ShareErrorEventArgs{ Exception = ex });
 
-			var webClient = new WebClient();
-			webClient.DownloadDataCompleted += (s, e) => {
+				return false;			
+			}
+		}
 
-				if(e.Error != null)
-					return;
-				
-				var bytes = e.Result; // get the downloaded data
-				var localFolder = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
-				string localPath = System.IO.Path.Combine (localFolder, fileName);
-				File.WriteAllBytes (localPath, bytes); // write to local storage
-				ShareLocalFile(string.Format($"file://{localFolder}/{fileName}"), "Test Android");
-			};
+		/// <summary>
+		/// Writes the file to local storage.
+		/// </summary>
+		/// <returns>The file.</returns>
+		/// <param name="fileName">File name.</param>
+		/// <param name="bytes">Bytes.</param>
+		private string WriteFile(string fileName, byte[] bytes)
+		{			
+			var localFolder = Android.OS.Environment.ExternalStorageDirectory.AbsolutePath;
+			string localPath = System.IO.Path.Combine (localFolder, fileName);
+			File.WriteAllBytes (localPath, bytes); // write to local storage
 
-			webClient.DownloadDataAsync(uri);
+			return string.Format($"file://{localFolder}/{fileName}");
 		}
 
         /// <summary>
@@ -120,8 +151,6 @@ namespace Plugin.Share
             chooserIntent.SetFlags(ActivityFlags.ClearTop);
             chooserIntent.SetFlags(ActivityFlags.NewTask);
             Android.App.Application.Context.StartActivity(chooserIntent);
-
         }
-
-    }
+    }					
 }

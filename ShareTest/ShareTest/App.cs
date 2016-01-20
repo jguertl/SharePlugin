@@ -32,6 +32,8 @@ namespace ShareTest
                 Text = "Share file"
             };
 
+			var messageLabel = new Label ();
+
             button.Clicked += (sender, args) =>
             {
                 CrossShare.Current.Share("Follow @JamesMontemagno on Twitter", "Share");
@@ -47,23 +49,22 @@ namespace ShareTest
                 CrossShare.Current.OpenBrowser("http://motzcod.es");
             };
 
-            button3.Clicked += (sender, args) =>
+            button3.Clicked += async (sender, args) =>
             {
-				var fileUri = "https://developer.xamarin.com/recipes/android/data/adapters/offline123.pdf";
+				var fileUri = "https://developer.xamarin.com/recipes/android/data/adapters/offline.pdf";
 				var fileName = "offline.pdf";
 
 //				var fileUri = "https://xamarin.com/content/images/pages/branding/assets/xamagon.png";
 //				var fileName = "xamagon.png";
 
-                CrossShare.Current.ShareExternalFile(fileUri, fileName);                              
+				messageLabel.Text = string.Format("Downloading {0}, please wait...", fileName);
+
+				if(await CrossShare.Current.ShareExternalFile(fileUri, fileName))
+					messageLabel.Text = "";
             };
 
-			CrossShare.Current.ShareCompleted += (s, e) => {
-				// Do something like cancel busy indicator
-			};
-
 			CrossShare.Current.ShareError += (s, e) => {
-				// handel error
+				messageLabel.Text = string.Format("Sharing failed: {0}", e.Exception.Message);
 			};
 
             // The root page of your application
@@ -76,7 +77,7 @@ namespace ShareTest
                         new Label {
                             XAlign = TextAlignment.Center,
                             Text = "Welcome to Share Plugin Sample!"
-                        }, button, button1, button2, button3
+                        }, button, button1, button2, button3, messageLabel
 
                     }
                 }

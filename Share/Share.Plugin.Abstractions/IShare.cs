@@ -8,8 +8,10 @@ namespace Plugin.Share.Abstractions
     /// </summary>
     public interface IShare
     {
-		event EventHandler ShareCompleted;
-		event EventHandler ShareError;
+		/// <summary>
+		/// Raised when a sharing error occurs.
+		/// </summary>
+		event EventHandler<ShareErrorEventArgs> ShareError;
 
         /// <summary>
         /// Simply share text on compatible services
@@ -32,8 +34,9 @@ namespace Plugin.Share.Abstractions
 		/// </summary>
 		/// <param name="fileUri">uir to external file</param>
 		/// <param name="fileName">name of the file</param>
-		/// <returns>awaitable Task</returns>
-        Task ShareExternalFile(string fileUri, string fileName);
+		/// <param name="title">Title of popup on share (not included in message)</param>
+		/// <returns>awaitable Task<bool></returns>
+		Task<bool> ShareExternalFile(string fileUri, string fileName, string title = "");
 
         /// <summary>
         /// Open a browser to a specific url
