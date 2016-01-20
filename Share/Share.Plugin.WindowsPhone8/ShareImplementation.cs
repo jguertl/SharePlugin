@@ -80,5 +80,17 @@ namespace Plugin.Share
             }
 
         }
+
+        public event EventHandler<ShareErrorEventArgs> ShareError;
+
+        public Task ShareLocalFile(string localFilePath, string title = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ShareRemoteFile(string fileUri, string fileName, string title = "")
+        {
+            throw new NotImplementedException();
+        }
     }
 }

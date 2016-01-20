@@ -11,7 +11,7 @@ namespace Plugin.Share
     /// Implementation for Share
     /// </summary>
     public class ShareImplementation : IShare
-    {
+    {        
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -36,6 +36,7 @@ namespace Plugin.Share
 
         string text, title, url;
         DataTransferManager dataTransferManager;
+                
         /// <summary>
         /// Simply share text on compatible services
         /// </summary>
@@ -93,6 +94,18 @@ namespace Plugin.Share
             {
                 Debug.WriteLine("Unable to share text: " + ex);
             }
+        }
+
+        public event EventHandler<ShareErrorEventArgs> ShareError;
+
+        public Task ShareLocalFile(string localFilePath, string title = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ShareRemoteFile(string fileUri, string fileName, string title = "")
+        {
+            throw new NotImplementedException();
         }
     }
 }
