@@ -3,10 +3,12 @@
 Simple way to share a message or link on a social network in any Xamarin or Windows Project
 
 #### Setup
+
 * Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Share.Plugin/)
 * Install into your PCL project and Platform Specific projects
 
 Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj5weexcjk6g9?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/shareplugin)
+
 
 **Platform Support**
 
