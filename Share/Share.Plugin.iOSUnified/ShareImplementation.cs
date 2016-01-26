@@ -45,14 +45,12 @@ namespace Plugin.Share
             {
                 var items = new NSObject[] { new NSString(text ?? string.Empty) };
                 var activityController = new UIActivityViewController(items, null);
+                var vc = GetVisibleViewController();
+
                 if (activityController.PopoverPresentationController != null)
                 {
-                    activityController.PopoverPresentationController.SourceView =
-                      UIApplication.SharedApplication.KeyWindow.RootViewController.ChildViewControllers != null
-                        ? UIApplication.SharedApplication.KeyWindow.RootViewController.ChildViewControllers[0].View
-                        : UIApplication.SharedApplication.KeyWindow.RootViewController.View;
+                    activityController.PopoverPresentationController.SourceView = vc.View;
                 }
-                var vc = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
                 await vc.PresentViewControllerAsync(activityController, true);
             }
@@ -75,14 +73,12 @@ namespace Plugin.Share
             {
                 var items = new NSObject[] { new NSString(message ?? string.Empty), NSUrl.FromString(url) };
                 var activityController = new UIActivityViewController(items, null);
+                var vc = GetVisibleViewController();
+
                 if (activityController.PopoverPresentationController != null)
                 {
-                    activityController.PopoverPresentationController.SourceView =
-                      UIApplication.SharedApplication.KeyWindow.RootViewController.ChildViewControllers != null
-                        ? UIApplication.SharedApplication.KeyWindow.RootViewController.ChildViewControllers[0].View
-                        : UIApplication.SharedApplication.KeyWindow.RootViewController.View;
+                    activityController.PopoverPresentationController.SourceView = vc.View;
                 }
-                var vc = UIApplication.SharedApplication.KeyWindow.RootViewController;
 
                 await vc.PresentViewControllerAsync(activityController, true);
             }
@@ -90,6 +86,30 @@ namespace Plugin.Share
             {
                 Console.WriteLine("Unable to share text" + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Gets the visible view controller.
+        /// </summary>
+        /// <returns>The visible view controller.</returns>
+        UIViewController GetVisibleViewController()
+        {
+            var rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+
+            if (rootController.PresentedViewController == null)
+                return rootController;
+
+            if (rootController.PresentedViewController is UINavigationController)
+            {
+                return ((UINavigationController)rootController.PresentedViewController).TopViewController;
+            }
+
+            if (rootController.PresentedViewController is UITabBarController)
+            {
+                return ((UITabBarController)rootController.PresentedViewController).SelectedViewController;
+            }
+
+            return rootController.PresentedViewController;
         }
        
     }
