@@ -1,18 +1,25 @@
-## ![](http://refractored.com/images/plugin_share.png) Share Plugin for Xamarin and Windows
+﻿## ![](http://refractored.com/images/plugin_share.png) Share Plugin for Xamarin and Windows
 
 Simple way to share a message or link on a social network in any Xamarin or Windows Project
 
 #### Setup
-* Available on NuGet: https://www.nuget.org/packages/Share.Plugin.Xamarin.Forms/
+* Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Share.Plugin/)
 * Install into your PCL project and Platform Specific projects
 
-**Supports**
-* Xamarin.iOS (Unified)
-* Xamarin.Android
-* Windows Phone 8/8.1 (Silverlight)
-* Windows Phone 8.1 RT
-* Windows Store 8.1 RT
+Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj5weexcjk6g9?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/shareplugin)
 
+**Platform Support**
+
+|Platform|Supported|Version|
+| ------------------- | :-----------: | :------------------: |
+|Xamarin.iOS|Yes|iOS 7+|
+|Xamarin.iOS Unified|Yes|iOS 7+|
+|Xamarin.Android|Yes|API 10+|
+|Windows Phone Silverlight|Yes|8.0+|
+|Windows Phone RT|Yes|8.1+|
+|Windows Store RT|Yes|8.1+|
+|Windows 10 UWP|Yes|10+|
+|Xamarin.Mac|No||
 ### API Usage
 
 Call **CrossShare.Current** from any project or PCL to gain access to APIs.

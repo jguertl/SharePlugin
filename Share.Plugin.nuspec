@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata minClientVersion="2.8.1">
        <id>Plugin.Share</id>
-       <version>3.0.1</version>
+       <version>$version$</version>
        <title>Share Plugin for Xamarin and Windows</title>
        <authors>Jakob Gürtl,James Montemagno</authors>
        <owners>Jakob Gürtl,JamesMontemagno</owners>
