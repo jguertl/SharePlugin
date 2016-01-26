@@ -1,0 +1,10 @@
+﻿<Properties StartupItem="Share/Share.Plugin/Share.Plugin.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../xamarin-evolve-mobile/XamarinEvolve/XamarinEvolve.Clients.UI/Converters/DateConverters.cs" line="17" offsetX="712" offsetY="304" expression="value" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>
