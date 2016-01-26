@@ -59,6 +59,38 @@ Task OpenBrowser(string url);
 Task ShareLink(string url, string message = null, string title = null);
 ```
 
+## Clipboard
+Added in 3.2.X is the ability to set text directly on the clipboard. All Operatings support this except for Windows Phone 8.1 RT
+
+```
+/// <summary>
+/// Sets text on the clipboard
+/// </summary>
+/// <param name="text">Text to set</param>
+/// <param name="label">Label to dislay (no required, Android only)</param>
+/// <returns></returns>
+Task<bool> SetClipboardText(string text, string label = null);
+
+/// <summary>
+/// Gets if clipboard is supported
+/// </summary>
+bool SupportsClipboard { get; }
+```
+
+
+## iOS Specific Support 
+Added in iOS 9 is the ability to use the new SFSafariViewController to open the browser: https://blog.xamarin.com/keep-users-engaged-with-ios-9s-sfsafariviewcontroller/ This is really awesome and you can toggle this on by setting:
+
+```csharp
+Plugin.Share.ShareImplementation.UseSafariViewController = true;
+```
+in your iOS project.
+
+If your app is on iOS 9 and it is true then it will use the new controller, else it will drop to normal OpenUrl.
+
+Please be aware of ATS restrcitions with SafariViews. 
+
+
 #### Maintaners
 * [Jakob Gürtl](https://github.com/jguertl)
 * [James Montemagno](https://github.com/jamesmontemagno)

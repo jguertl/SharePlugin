@@ -16,6 +16,8 @@ namespace Plugin.Share
         {
             var test = DateTime.UtcNow;
         }
+
+        public static bool UseSafariViewController { get; set; }
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
@@ -25,7 +27,22 @@ namespace Plugin.Share
         {
             try
             {
-                UIApplication.SharedApplication.OpenUrl(new NSUrl(url));
+                if (UseSafariViewController && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
+                {
+                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url));
+                    var vc = GetVisibleViewController();
+
+                    if (sfViewController.PopoverPresentationController != null)
+                    {
+                        sfViewController.PopoverPresentationController.SourceView = vc.View;
+                    }
+
+                    await vc.PresentViewControllerAsync(sfViewController, true);
+                }
+                else
+                {
+                    UIApplication.SharedApplication.OpenUrl(new NSUrl(url));
+                }
             }
             catch (Exception ex)
             {
@@ -111,6 +128,23 @@ namespace Plugin.Share
 
             return rootController.PresentedViewController;
         }
-       
+
+        /// <summary>
+        /// Sets text on the clipboard
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        /// <param name="label">Label to display (not required, Android only)</param>
+        /// <returns></returns>
+        public Task<bool> SetClipboardText(string text, string label = null)
+        {
+            UIPasteboard.General.String = text;
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Gets if cliboard is supported
+        /// </summary>
+        public bool SupportsClipboard { get { return true; } }
+
     }
 }

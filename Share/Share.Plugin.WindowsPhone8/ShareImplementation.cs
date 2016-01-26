@@ -80,5 +80,22 @@ namespace Plugin.Share
             }
 
         }
+
+        /// <summary>
+        /// Sets text on the clipboard
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        /// <param name="label">Label to display (not required, Android only)</param>
+        /// <returns></returns>
+        public Task<bool> SetClipboardText(string text, string label = null)
+        {
+            Clipboard.SetText(text);
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Gets if cliboard is supported
+        /// </summary>
+        public bool SupportsClipboard { get { return true; } }
     }
 }

@@ -1,3 +1,4 @@
+using Android.App;
 using Android.Content;
 using Plugin.Share.Abstractions;
 using System;
@@ -74,8 +75,44 @@ namespace Plugin.Share
             chooserIntent.SetFlags(ActivityFlags.ClearTop);
             chooserIntent.SetFlags(ActivityFlags.NewTask);
             Android.App.Application.Context.StartActivity(chooserIntent);
-
+           
         }
+
+        /// <summary>
+        /// Sets text on the clipboard
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        /// <param name="label">Label to display (not required, Android only)</param>
+        /// <returns></returns>
+        public Task<bool> SetClipboardText(string text, string label = null)
+        {
+            try
+            {
+                var sdk = (int)Android.OS.Build.VERSION.SdkInt;
+                if (sdk < (int)Android.OS.BuildVersionCodes.Honeycomb)
+                {
+                    var clipboard = (Android.Text.ClipboardManager)Application.Context.GetSystemService(Context.ClipboardService);
+                    clipboard.Text = text;
+                }
+                else
+                {
+                    var clipboard = (ClipboardManager)Application.Context.GetSystemService(Context.ClipboardService);
+                    clipboard.PrimaryClip = ClipData.NewPlainText(label ?? string.Empty, text);
+                }
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Unable to copy to clipboard: " + ex);
+            }
+
+            return Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// Gets if cliboard is supported
+        /// </summary>
+        public bool SupportsClipboard { get { return true; } }
 
     }
 }

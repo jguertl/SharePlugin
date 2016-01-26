@@ -94,5 +94,37 @@ namespace Plugin.Share
                 Debug.WriteLine("Unable to share text: " + ex);
             }
         }
+
+        /// <summary>
+        /// Sets text on the clipboard
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        /// <param name="label">Label to display (not required, Android only)</param>
+        /// <returns></returns>
+        public Task<bool> SetClipboardText(string text, string label = null)
+        {
+#if WINDOWS_UWP || WINDOWS_APP
+            var dataPackage = new DataPackage();
+            dataPackage.RequestedOperation = DataPackageOperation.Copy;
+            dataPackage.SetText(text);
+
+            Clipboard.SetContent(dataPackage);
+            return Task.FromResult(true);
+#else
+            return Task.FromResult(false);
+#endif
+        }
+
+        /// <summary>
+        /// Gets if cliboard is supported
+        /// </summary>
+        public bool SupportsClipboard
+        {
+#if WINDOWS_UWP || WINDOWS_APP
+            get { return true; }
+#else
+            get { return false; }
+#endif
+        }
     }
 }

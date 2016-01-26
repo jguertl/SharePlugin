@@ -32,5 +32,17 @@ namespace Plugin.Share.Abstractions
         /// <returns>awaitable Task</returns>
         Task ShareLink(string url, string message = null, string title = null);
 
+        /// <summary>
+        /// Sets text on the clipboard
+        /// </summary>
+        /// <param name="text">Text to set</param>
+        /// <param name="label">Label to dislay (no required, Android only)</param>
+        /// <returns></returns>
+        Task<bool> SetClipboardText(string text, string label = null);
+
+        /// <summary>
+        /// Gets if clipboard is supported
+        /// </summary>
+        bool SupportsClipboard { get; }
     }
 }
