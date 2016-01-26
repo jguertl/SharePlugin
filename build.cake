@@ -6,9 +6,19 @@ var version = EnvironmentVariable ("APPVEYOR_BUILD_VERSION") ?? Argument("versio
 
 Task ("Default").Does (() =>
 {
-	NuGetRestore ("./Share.sln");
 
-	DotNetBuild ("./Share.sln", c => c.Configuration = "Release");
+    const string sln = "./Share.sln";
+    const string cfg = "Release";
+
+	NuGetRestore (sln);
+
+    if (!IsRunningOnWindows ())
+        DotNetBuild (sln, c => c.Configuration = cfg);
+    else
+        MSBuild (sln, c => { 
+            c.Configuration = cfg;
+            c.MSBuildPlatform = MSBuildPlatform.x86;
+        });
 });
 
 Task ("NuGetPack")
