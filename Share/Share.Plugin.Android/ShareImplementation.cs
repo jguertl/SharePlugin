@@ -77,6 +77,9 @@ namespace Plugin.Share
 			if (string.IsNullOrEmpty (localFilePath))
 				return;
 
+			if (!localFilePath.StartsWith ("file://"))
+				localFilePath = string.Format ("file://{0}", localFilePath);
+			
 			var fileUri = Android.Net.Uri.Parse (localFilePath);
 				
 			var intent = new Intent ();
