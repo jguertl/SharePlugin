@@ -1,7 +1,8 @@
 using Foundation;
 using Plugin.Share.Abstractions;
-using Social;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UIKit;
 
@@ -17,7 +18,21 @@ namespace Plugin.Share
             var test = DateTime.UtcNow;
         }
 
+        static ShareImplementation()
+        {
+            ExcludedUIActivityTypes = new List<NSString>();
+        }
+
+        /// <summary>
+        /// Gets or sets if Share Plugin should use SFSafariViewController on iOS 9+ when opening the browser.
+        /// </summary>
         public static bool UseSafariViewController { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ExcludedUIActivityTypes from sharing links or text
+        /// </summary>
+        public static List<NSString> ExcludedUIActivityTypes { get; set; }
+
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
@@ -58,10 +73,27 @@ namespace Plugin.Share
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
+            var excluded = ExcludedUIActivityTypes == null ? null : ExcludedUIActivityTypes.ToArray();
+            await Share(text, title, excluded);
+        }
+
+        /// <summary>
+        /// Simply share text on compatible services
+        /// </summary>
+        /// <param name="text">Text to share</param>
+        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
+        /// <returns>awaitable Task</returns>
+        public async Task Share(string text, string title = null, params NSString[] excludedActivityTypes)
+        {
             try
             {
                 var items = new NSObject[] { new NSString(text ?? string.Empty) };
                 var activityController = new UIActivityViewController(items, null);
+
+                if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
+                    activityController.ExcludedActivityTypes = excludedActivityTypes.ToArray();
+
                 var vc = GetVisibleViewController();
 
                 if (activityController.PopoverPresentationController != null)
@@ -86,11 +118,28 @@ namespace Plugin.Share
         /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null)
         {
+            var excluded = ExcludedUIActivityTypes == null ? null : ExcludedUIActivityTypes.ToArray();
+            await ShareLink(url, message, title, excluded);
+        }
+
+        /// <summary>
+        /// Share a link url with compatible services
+        /// </summary>
+        /// <param name="url">Link to share</param>
+        /// <param name="message">Message to share</param>
+        /// <param name="title">Title of the popup</param>
+        /// <param name="excludedActivityTypes">UIActivityType to excluded</param>
+        /// <returns>awaitable Task</returns>
+        public async Task ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
+        {
             try
             {
                 var items = new NSObject[] { new NSString(message ?? string.Empty), NSUrl.FromString(url) };
                 var activityController = new UIActivityViewController(items, null);
                 var vc = GetVisibleViewController();
+
+                if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
+                    activityController.ExcludedActivityTypes = excludedActivityTypes;
 
                 if (activityController.PopoverPresentationController != null)
                 {
