@@ -44,7 +44,7 @@ namespace Plugin.Share
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
-            await ShareLink(text, title, null);
+            await ShareLink(null, text, title);
         }
         /// <summary>
         /// Share a link url with compatible services
