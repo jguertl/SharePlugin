@@ -45,8 +45,8 @@ namespace Plugin.Share
                     if (toolbarColor != null)
                         tabsBuilder.SetToolbarColor(Android.Graphics.Color.Argb(toolbarColor.A,
                             toolbarColor.R,
-                            toolbarColor.B,
-                            toolbarColor.G));
+                            toolbarColor.G,
+                            toolbarColor.B));
                     
                     var intent = tabsBuilder.Build();
                     intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));
