@@ -13,8 +13,14 @@
        <description>
          Share Plugin for Xamarin and Windows to share text, link, or open a browser.
        </description>
+       <dependencies>
+           <group targetFramework="MonoAndroid10">
+               <dependency id="Xamarin.Android.Support.CustomTabs" version="23.0.1.3"/>
+               <dependency id="Plugin.CurrentActivity" version="1.0.1"/>
+           </group>
+       </dependencies>
        <summary>Share Plugin for Xamarin and Windows to share text, link, or open a browser.</summary>
-       <tags>share, xamarin, pcl, xam.pcl, windows phone, winphone, wp8, android, xamarin.forms, ios</tags>
+       <tags>share, open url, share text, share link, browser, xamarin, pcl, xam.pcl, windows phone, winphone, wp8, android, xamarin.forms, ios</tags>
    </metadata>
    <files>
      <!--Core-->

@@ -15,13 +15,16 @@ namespace Plugin.Share
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
-        } 
+        }
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
+        /// <param name="readerMode">If in reader mode if available</param>
+        /// <param name="showTitle">Show title if avaialble to set</param>
+        /// <param name="toolbarColor">Color to set of the  toolbar if avaialble</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url)
+        public async Task OpenBrowser(string url, bool showTitle = false, bool readerMode = false, ShareColor toolbarColor = null)
         {
             try
             {
