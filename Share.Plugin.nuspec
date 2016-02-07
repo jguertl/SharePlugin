@@ -11,7 +11,7 @@
 	     <projectUrl>https://github.com/jguertl/SharePlugin</projectUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
        <description>
-         Share Plugin for Xamarin and Windows to share text, link, or open a browser.
+         Share Plugin for Xamarin and Windows to share text, link, copy text to clipboard, or open a browser.
        </description>
        <dependencies>
            <group targetFramework="MonoAndroid10">
@@ -20,7 +20,7 @@
            </group>
        </dependencies>
        <summary>Share Plugin for Xamarin and Windows to share text, link, or open a browser.</summary>
-       <tags>share, open url, share text, share link, browser, xamarin, pcl, xam.pcl, windows phone, winphone, wp8, android, xamarin.forms, ios</tags>
+       <tags>share, open url, clipboard, sfsafariwebviewcontroller, chrome custom tabs, share text, share link, browser, xamarin, pcl, xam.pcl, windows phone, winphone, wp8, android, xamarin.forms, ios</tags>
    </metadata>
    <files>
      <!--Core-->
