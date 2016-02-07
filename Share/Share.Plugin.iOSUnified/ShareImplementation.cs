@@ -24,11 +24,6 @@ namespace Plugin.Share
         }
 
         /// <summary>
-        /// Gets or sets if Share Plugin should use SFSafariViewController on iOS 9+ when opening the browser.
-        /// </summary>
-        public static bool UseSafariViewController { get; set; }
-
-        /// <summary>
         /// Gets or sets the ExcludedUIActivityTypes from sharing links or text
         /// </summary>
         public static List<NSString> ExcludedUIActivityTypes { get; set; }
@@ -37,17 +32,15 @@ namespace Plugin.Share
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
-        /// <param name="readerMode">If in reader mode if available</param>
-        /// <param name="showTitle">Show title if avaialble to set</param>
-        /// <param name="toolbarColor">Color to set of the  toolbar if avaialble</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, bool showTitle = false, bool readerMode = false, ShareColor toolbarColor = null)
+        public async Task OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
-                if (UseSafariViewController && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
+                if ((options?.UseSafariWebViewController ?? false) && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
-                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), readerMode);
+                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafairReaderMode ?? false);
                     var vc = GetVisibleViewController();
 
                     if (sfViewController.PopoverPresentationController != null)
