@@ -90,6 +90,14 @@ If your app is on iOS 9 and it is true then it will use the new controller, else
 
 Please be aware of ATS restrcitions with SafariViews. 
 
+### Facebook doesn't support share :(
+Facebook stopped support for sharing, which is a bummer seeing they show up in the list. I recommend removing them: 
+In your ApplicationDelegate call:
+```
+ShareImplementation.ExcludedUIActivityTypes = new List<string>{ UIActivityType.PostToFacebook};
+```
+
+See this thread: http://stackoverflow.com/questions/29890747/ios-how-to-share-text-and-image-on-social-networks
 
 #### Maintaners
 * [Jakob Gürtl](https://github.com/jguertl)
