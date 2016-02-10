@@ -12,16 +12,21 @@ namespace Plugin.Share
     /// </summary>
     public class ShareImplementation : IShare
     {
+        /// <summary>
+        /// For linker
+        /// </summary>
+        /// <returns></returns>
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
-        } 
+        }
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url)
+        public async Task OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -96,6 +101,6 @@ namespace Plugin.Share
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
-        public bool SupportsClipboard { get { return true; } }
+        public bool SupportsClipboard => true;
     }
 }

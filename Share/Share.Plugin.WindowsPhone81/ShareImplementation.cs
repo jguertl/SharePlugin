@@ -12,6 +12,10 @@ namespace Plugin.Share
     /// </summary>
     public class ShareImplementation : IShare
     {
+        /// <summary>
+        /// For linker
+        /// </summary>
+        /// <returns></returns>
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -21,8 +25,9 @@ namespace Plugin.Share
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url)
+        public async Task OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -42,10 +47,9 @@ namespace Plugin.Share
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of popup on share (not included in message)</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
-        {
-            await ShareLink(null, text, title);
-        }
+        public Task Share(string text, string title = null) => ShareLink(null, text, title);
+
+        
         /// <summary>
         /// Share a link url with compatible services
         /// </summary>

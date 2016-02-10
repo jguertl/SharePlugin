@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 namespace Plugin.Share.Abstractions
 {
+    
     /// <summary>
     /// Interface for Share
     /// </summary>
@@ -15,13 +16,14 @@ namespace Plugin.Share.Abstractions
         /// <param name="title">Title of popup on share (not included in message)</param>
         /// <returns>awaitable Task</returns>
         Task Share(string text, string title = null);
-        
+
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        Task OpenBrowser(string url);
+        Task OpenBrowser(string url, BrowserOptions options = null);
 
         /// <summary>
         /// Share a link url with compatible services

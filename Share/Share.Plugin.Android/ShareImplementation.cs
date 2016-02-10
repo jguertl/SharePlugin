@@ -1,5 +1,7 @@
 using Android.App;
 using Android.Content;
+using Android.Support.CustomTabs;
+using Plugin.CurrentActivity;
 using Plugin.Share.Abstractions;
 using System;
 using System.Threading.Tasks;
@@ -11,6 +13,10 @@ namespace Plugin.Share
   /// </summary>
   public class ShareImplementation : IShare
   {
+        /// <summary>
+        /// For linker
+        /// </summary>
+        /// <returns></returns>
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -19,17 +25,40 @@ namespace Plugin.Share
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url)
+        public async Task OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
-                var intent = new Intent(Intent.ActionView);
-                intent.SetData(Android.Net.Uri.Parse(url));
+                if (options == null)
+                    options = new BrowserOptions();
 
-                intent.SetFlags(ActivityFlags.ClearTop);
-                intent.SetFlags(ActivityFlags.NewTask);
-                Android.App.Application.Context.StartActivity(intent);
+                if (CrossCurrentActivity.Current.Activity == null)
+                {
+                    var intent = new Intent(Intent.ActionView);
+                    intent.SetData(Android.Net.Uri.Parse(url));
+
+                    intent.SetFlags(ActivityFlags.ClearTop);
+                    intent.SetFlags(ActivityFlags.NewTask);
+                    Android.App.Application.Context.StartActivity(intent);
+                }
+                else
+                {
+                    var tabsBuilder = new CustomTabsIntent.Builder();
+                    tabsBuilder.SetShowTitle(options?.ChromeShowTitle ?? false);
+                    var toolbarColor = options?.ChromeToolbarColor;
+                    if (toolbarColor != null)
+                    {
+                        tabsBuilder.SetToolbarColor(Android.Graphics.Color.Argb(toolbarColor.A,
+                            toolbarColor.R,
+                            toolbarColor.G,
+                            toolbarColor.B));
+                    }
+                    
+                    var intent = tabsBuilder.Build();
+                    intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));
+                }
 
             }
             catch (Exception ex)
@@ -112,7 +141,7 @@ namespace Plugin.Share
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
-        public bool SupportsClipboard { get { return true; } }
+        public bool SupportsClipboard => true;
 
     }
 }

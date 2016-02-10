@@ -13,6 +13,10 @@ namespace Plugin.Share
     /// </summary>
     public class ShareImplementation : IShare
     {
+        /// <summary>
+        /// For linker
+        /// </summary>
+        /// <returns></returns>
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -20,13 +24,8 @@ namespace Plugin.Share
 
         static ShareImplementation()
         {
-            ExcludedUIActivityTypes = new List<NSString>();
+            ExcludedUIActivityTypes = new List<NSString> { UIActivityType.PostToFacebook };
         }
-
-        /// <summary>
-        /// Gets or sets if Share Plugin should use SFSafariViewController on iOS 9+ when opening the browser.
-        /// </summary>
-        public static bool UseSafariViewController { get; set; }
 
         /// <summary>
         /// Gets or sets the ExcludedUIActivityTypes from sharing links or text
@@ -37,14 +36,18 @@ namespace Plugin.Share
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url)
+        public async Task OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
-                if (UseSafariViewController && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
+                if (options == null)
+                    options = new BrowserOptions();
+
+                if ((options?.UseSafariWebViewController ?? false) && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
-                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url));
+                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafairReaderMode ?? false);
                     var vc = GetVisibleViewController();
 
                     if (sfViewController.PopoverPresentationController != null)
@@ -193,7 +196,7 @@ namespace Plugin.Share
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
-        public bool SupportsClipboard { get { return true; } }
+        public bool SupportsClipboard => true;
 
     }
 }
