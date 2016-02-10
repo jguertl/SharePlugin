@@ -31,6 +31,8 @@ namespace Plugin.Share
         {
             try
             {
+                if (options == null)
+                    options = new BrowserOptions();
                 if (CrossCurrentActivity.Current.Activity == null)
                 {
                     var intent = new Intent(Intent.ActionView);

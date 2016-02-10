@@ -24,7 +24,7 @@ namespace Plugin.Share
 
         static ShareImplementation()
         {
-            ExcludedUIActivityTypes = new List<NSString>();
+            ExcludedUIActivityTypes = new List<NSString> { UIActivityType.PostToFacebook };
         }
 
         /// <summary>
@@ -42,6 +42,9 @@ namespace Plugin.Share
         {
             try
             {
+                if (options == null)
+                    options = new BrowserOptions();
+
                 if ((options?.UseSafariWebViewController ?? false) && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
                     var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafairReaderMode ?? false);
