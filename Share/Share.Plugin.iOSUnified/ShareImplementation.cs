@@ -98,11 +98,14 @@ namespace Plugin.Share
                     activityController.ExcludedActivityTypes = excludedActivityTypes.ToArray();
 
                 var vc = GetVisibleViewController();
-
-                if (activityController.PopoverPresentationController != null)
-                {
-                    activityController.PopoverPresentationController.SourceView = vc.View;
-                }
+                
+                if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+				{
+                    if (activityController.PopoverPresentationController != null)
+                    {
+                        activityController.PopoverPresentationController.SourceView = vc.View;
+                    }
+				}
 
                 await vc.PresentViewControllerAsync(activityController, true);
             }
@@ -143,11 +146,14 @@ namespace Plugin.Share
 
                 if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
                     activityController.ExcludedActivityTypes = excludedActivityTypes;
-
-                if (activityController.PopoverPresentationController != null)
-                {
-                    activityController.PopoverPresentationController.SourceView = vc.View;
-                }
+                
+                if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
+				{
+                    if (activityController.PopoverPresentationController != null)
+                    {
+                        activityController.PopoverPresentationController.SourceView = vc.View;
+                    }
+				}
 
                 await vc.PresentViewControllerAsync(activityController, true);
             }
