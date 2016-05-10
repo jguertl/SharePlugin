@@ -4,7 +4,7 @@ Simple way to share a message or link, copy text to clipboard, or open a browser
 
 #### Setup
 
-* Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Share.Plugin/)
+* Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.Share/)
 * Install into your PCL project and Platform Specific projects
 
 Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj5weexcjk6g9?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/shareplugin)
