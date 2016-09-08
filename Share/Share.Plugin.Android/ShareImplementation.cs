@@ -4,15 +4,16 @@ using Android.Support.CustomTabs;
 using Plugin.CurrentActivity;
 using Plugin.Share.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Plugin.Share
 {
-  /// <summary>
-  /// Implementation for Feature
-  /// </summary>
-  public class ShareImplementation : IShare
-  {
+    /// <summary>
+    /// Implementation for Feature
+    /// </summary>
+    public class ShareImplementation : IShare
+    {
         /// <summary>
         /// For linker
         /// </summary>
@@ -55,7 +56,7 @@ namespace Plugin.Share
                             toolbarColor.G,
                             toolbarColor.B));
                     }
-                    
+
                     var intent = tabsBuilder.Build();
                     intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));
                 }
@@ -74,16 +75,7 @@ namespace Plugin.Share
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
-            var intent = new Intent(Intent.ActionSend);
-            intent.SetType("text/plain");
-            intent.PutExtra(Intent.ExtraText, text ?? string.Empty);
-
-            intent.SetFlags(ActivityFlags.ClearTop);
-            intent.SetFlags(ActivityFlags.NewTask);
-            var chooserIntent = Intent.CreateChooser(intent, title ?? string.Empty);
-            chooserIntent.SetFlags(ActivityFlags.ClearTop);
-            chooserIntent.SetFlags(ActivityFlags.NewTask);
-            Android.App.Application.Context.StartActivity(chooserIntent);
+            ShareInternal(title, text, null);
         }
 
         /// <summary>
@@ -95,16 +87,33 @@ namespace Plugin.Share
         /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null)
         {
+            ShareInternal(title, message, url);
+        }
+
+        /// <summary>
+        /// Share data with compatible services
+        /// </summary>
+        /// <param name="title">Title to share</param>
+        /// <param name="message">Message to share</param>
+        /// <param name="url">Link to share</param>
+        void ShareInternal(string title, string message, string url)
+        {
+            var items = new List<string>();
+            if (message != null)
+                items.Add(message);
+            if (url != null)
+                items.Add(url);
+
             var intent = new Intent(Intent.ActionSend);
             intent.SetType("text/plain");
-            intent.PutExtra(Intent.ExtraText, url ?? string.Empty);
-            intent.PutExtra(Intent.ExtraSubject, message ?? string.Empty);
+            intent.PutExtra(Intent.ExtraText, string.Join(Environment.NewLine, items));
+            if (title != null)
+                intent.PutExtra(Intent.ExtraSubject, title);
 
-            var chooserIntent = Intent.CreateChooser(intent, title ?? string.Empty);
+            var chooserIntent = Intent.CreateChooser(intent, title);
             chooserIntent.SetFlags(ActivityFlags.ClearTop);
             chooserIntent.SetFlags(ActivityFlags.NewTask);
             Android.App.Application.Context.StartActivity(chooserIntent);
-           
         }
 
         /// <summary>
