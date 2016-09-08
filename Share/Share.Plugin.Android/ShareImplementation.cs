@@ -22,6 +22,7 @@ namespace Plugin.Share
         {
             var test = DateTime.UtcNow;
         }
+
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
@@ -67,11 +68,12 @@ namespace Plugin.Share
                 Console.WriteLine("Unable to open browser: " + ex.Message);
             }
         }
+
         /// <summary>
-        /// Simply share text on compatible services
+        /// Simply share text with compatible services
         /// </summary>
         /// <param name="text">Text to share</param>
-        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
@@ -82,8 +84,8 @@ namespace Plugin.Share
         /// Share a link url with compatible services
         /// </summary>
         /// <param name="url">Link to share</param>
-        /// <param name="message">Message to share</param>
-        /// <param name="title">Title of the popup</param>
+        /// <param name="message">Message to include with the link</param>
+        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null)
         {
