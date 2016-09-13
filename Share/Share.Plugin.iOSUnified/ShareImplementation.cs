@@ -68,11 +68,12 @@ namespace Plugin.Share
             }
 
         }
+
         /// <summary>
-        /// Simply share text on compatible services
+        /// Simply share text with compatible services
         /// </summary>
         /// <param name="text">Text to share</param>
-        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null)
         {
@@ -81,46 +82,23 @@ namespace Plugin.Share
         }
 
         /// <summary>
-        /// Simply share text on compatible services
+        /// Simply share text with compatible services
         /// </summary>
         /// <param name="text">Text to share</param>
-        /// <param name="title">Title of popup on share (not included in message)</param>
+        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
         /// <returns>awaitable Task</returns>
         public async Task Share(string text, string title = null, params NSString[] excludedActivityTypes)
         {
-            try
-            {
-                var items = new NSObject[] { new NSString(text ?? string.Empty) };
-                var activityController = new UIActivityViewController(items, null);
-
-                if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
-                    activityController.ExcludedActivityTypes = excludedActivityTypes.ToArray();
-
-                var vc = GetVisibleViewController();
-                
-                if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
-				{
-                    if (activityController.PopoverPresentationController != null)
-                    {
-                        activityController.PopoverPresentationController.SourceView = vc.View;
-                    }
-				}
-
-                await vc.PresentViewControllerAsync(activityController, true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unable to share text" + ex.Message);
-            }
+            await ShareInternal(title, text, null, excludedActivityTypes);
         }
 
         /// <summary>
         /// Share a link url with compatible services
         /// </summary>
         /// <param name="url">Link to share</param>
-        /// <param name="message">Message to share</param>
-        /// <param name="title">Title of the popup</param>
+        /// <param name="message">Message to include with the link</param>
+        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null)
         {
@@ -132,28 +110,47 @@ namespace Plugin.Share
         /// Share a link url with compatible services
         /// </summary>
         /// <param name="url">Link to share</param>
-        /// <param name="message">Message to share</param>
-        /// <param name="title">Title of the popup</param>
-        /// <param name="excludedActivityTypes">UIActivityType to excluded</param>
+        /// <param name="message">Message to include with the link</param>
+        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
+        /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
         /// <returns>awaitable Task</returns>
         public async Task ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
         {
+            await ShareInternal(title, message, url, excludedActivityTypes);
+        }
+
+        /// <summary>
+        /// Share data with compatible services
+        /// </summary>
+        /// <param name="title">Title to share</param>
+        /// <param name="message">Message to share</param>
+        /// <param name="url">Link to share</param>
+        /// <param name="excludedActivityTypes">UIActivityType to excluded</param>
+        /// <returns>awaitable Task</returns>
+        async Task ShareInternal(string title, string message, string url, NSString[] excludedActivityTypes)
+        {
             try
             {
-                var items = new NSObject[] { new NSString(message ?? string.Empty), NSUrl.FromString(url) };
-                var activityController = new UIActivityViewController(items, null);
-                var vc = GetVisibleViewController();
+                var items = new List<NSObject>();
+                if (message != null)
+                    items.Add(new ShareActivityItemSource(new NSString(message), title));
+                if (url != null)
+                    items.Add(new ShareActivityItemSource(NSUrl.FromString(url), title));
+
+                var activityController = new UIActivityViewController(items.ToArray(), null);
 
                 if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
                     activityController.ExcludedActivityTypes = excludedActivityTypes;
-                
+
+                var vc = GetVisibleViewController();
+
                 if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
-				{
+                {
                     if (activityController.PopoverPresentationController != null)
                     {
                         activityController.PopoverPresentationController.SourceView = vc.View;
                     }
-				}
+                }
 
                 await vc.PresentViewControllerAsync(activityController, true);
             }
