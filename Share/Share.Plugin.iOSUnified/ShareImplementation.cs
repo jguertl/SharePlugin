@@ -28,7 +28,7 @@ namespace Plugin.Share
         }
 
         /// <summary>
-        /// Gets or sets the ExcludedUIActivityTypes from sharing links or text
+        /// Gets or sets the UIActivityTypes that should not be displayed.
         /// </summary>
         public static List<NSString> ExcludedUIActivityTypes { get; set; }
 
@@ -75,10 +75,14 @@ namespace Plugin.Share
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task Share(string text, string title = null)
         {
-            var excluded = ExcludedUIActivityTypes == null ? null : ExcludedUIActivityTypes.ToArray();
-            await Share(text, title, excluded);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
+
+            return Share(shareMessage);
         }
 
         /// <summary>
@@ -88,9 +92,17 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null, params NSString[] excludedActivityTypes)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task Share(string text, string title = null, params NSString[] excludedActivityTypes)
         {
-            await ShareInternal(title, text, null, excludedActivityTypes);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
+
+            var shareOptions = new ShareOptions();
+            shareOptions.ExcludedUIActivityTypes = excludedActivityTypes?.Select(x => (string)x).ToArray();
+
+            return Share(shareMessage, shareOptions);
         }
 
         /// <summary>
@@ -100,10 +112,15 @@ namespace Plugin.Share
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task ShareLink(string url, string message = null, string title = null)
         {
-            var excluded = ExcludedUIActivityTypes == null ? null : ExcludedUIActivityTypes.ToArray();
-            await ShareLink(url, message, title, excluded);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            return Share(shareMessage);
         }
 
         /// <summary>
@@ -114,34 +131,49 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
         /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
         {
-            await ShareInternal(title, message, url, excludedActivityTypes);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            var shareOptions = new ShareOptions();
+            shareOptions.ExcludedUIActivityTypes = excludedActivityTypes?.Select(x => (string)x).ToArray();
+
+            return Share(shareMessage, shareOptions);
         }
 
         /// <summary>
-        /// Share data with compatible services
+        /// Share a message with compatible services
         /// </summary>
-        /// <param name="title">Title to share</param>
         /// <param name="message">Message to share</param>
-        /// <param name="url">Link to share</param>
-        /// <param name="excludedActivityTypes">UIActivityType to excluded</param>
+        /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        async Task ShareInternal(string title, string message, string url, NSString[] excludedActivityTypes)
+        public async Task Share(ShareMessage message, ShareOptions options = null)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             try
             {
+                // create activity items
                 var items = new List<NSObject>();
-                if (message != null)
-                    items.Add(new ShareActivityItemSource(new NSString(message), title));
-                if (url != null)
-                    items.Add(new ShareActivityItemSource(NSUrl.FromString(url), title));
+                if (message.Text != null)
+                    items.Add(new ShareActivityItemSource((NSString)message.Text, message.Title));
+                if (message.Url != null)
+                    items.Add(new ShareActivityItemSource(NSUrl.FromString(message.Url), message.Title));
 
+                // create activity controller
                 var activityController = new UIActivityViewController(items.ToArray(), null);
 
+                // set excluded activity types
+                var excludedActivityTypes = options?.ExcludedUIActivityTypes?.Select(x => (NSString)x).ToArray() ?? ExcludedUIActivityTypes?.ToArray();
                 if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
                     activityController.ExcludedActivityTypes = excludedActivityTypes;
 
+                // show activity controller
                 var vc = GetVisibleViewController();
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))

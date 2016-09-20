@@ -39,7 +39,7 @@ namespace Plugin.Share
             }
         }
 
-        string text, title, url;
+        string title, text, url;
         DataTransferManager dataTransferManager;
 
         /// <summary>
@@ -48,8 +48,15 @@ namespace Plugin.Share
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public Task Share(string text, string title = null) => ShareLink(null, text, title);
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task Share(string text, string title = null)
+        {
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
 
+            return Share(shareMessage);
+        }
 
         /// <summary>
         /// Share a link url with compatible services
@@ -58,11 +65,31 @@ namespace Plugin.Share
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task ShareLink(string url, string message = null, string title = null)
         {
-            this.text = message ?? string.Empty;
-            this.title = title ?? string.Empty;
-            this.url = url;
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            return Share(shareMessage);
+        }
+
+        /// <summary>
+        /// Share a message with compatible services
+        /// </summary>
+        /// <param name="message">Message to share</param>
+        /// <param name="options">Platform specific options</param>
+        /// <returns>awaitable Task</returns>
+        public async Task Share(ShareMessage message, ShareOptions options = null)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            title = message.Title;
+            text = message.Text;
+            url = message.Url;
             if (dataTransferManager == null)
             {
                 dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -76,25 +103,20 @@ namespace Plugin.Share
             try
             {
                 DataRequest request = e.Request;
+
                 // The Title is mandatory
-#if WINDOWS_UWP
-                request.Data.Properties.Title = title ?? Windows.ApplicationModel.Package.Current.DisplayName;
-#elif WINDOWS_APP
+#if WINDOWS_UWP || WINDOWS_APP
                 request.Data.Properties.Title = title ?? Windows.ApplicationModel.Package.Current.DisplayName;
 #else
                 request.Data.Properties.Title = title ?? string.Empty;
-
 #endif
 
-                if (!string.IsNullOrWhiteSpace(url))
-                {
-                  
+                if (text != null)
+                    request.Data.SetText(text);
+                if (url != null)
                     request.Data.SetWebLink(new Uri(url));
-
-                }
-                request.Data.SetText(text ?? string.Empty);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine("Unable to share text: " + ex);
             }

@@ -50,14 +50,14 @@ namespace Plugin.Share
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task Share(string text, string title = null)
         {
-            var task = new ShareStatusTask
-            {
-                Status = text ?? string.Empty
-            };
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
 
-            Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+            return Share(shareMessage);
         }
 
         /// <summary>
@@ -67,25 +67,57 @@ namespace Plugin.Share
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task ShareLink(string url, string message = null, string title = null)
         {
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            return Share(shareMessage);
+        }
+
+        /// <summary>
+        /// Share a message with compatible services
+        /// </summary>
+        /// <param name="message">Message to share</param>
+        /// <param name="options">Platform specific options</param>
+        /// <returns>awaitable Task</returns>
+        public async Task Share(ShareMessage message, ShareOptions options = null)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             try
             {
-                var task = new ShareLinkTask
+                if (message.Url == null)
                 {
-                    Message = message ?? string.Empty,
-                    LinkUri = new Uri(url),
-                    Title = title ?? string.Empty
-                };
+                    // ShareStatusTask
+                    var task = new ShareStatusTask
+                    {
+                        Status = message.Text ?? string.Empty
+                    };
 
-                Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+                    Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+                }
+                else
+                {
+                    // ShareLinkTask
+                    var task = new ShareLinkTask
+                    {
+                        Title = message.Title ?? string.Empty,
+                        Message = message.Text ?? string.Empty,
+                        LinkUri = new Uri(message.Url)
+                    };
+
+                    Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("Unable to create share link task: " + ex);
-                return;
+                Console.WriteLine("Unable to create share task: " + ex);
             }
-
         }
 
         /// <summary>

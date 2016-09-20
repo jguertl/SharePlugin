@@ -75,9 +75,17 @@ namespace Plugin.Share
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task Share(string text, string title = null)
         {
-            ShareInternal(title, text, null);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
+
+            var shareOptions = new ShareOptions();
+            shareOptions.ChooserTitle = title;
+
+            return Share(shareMessage, shareOptions);
         }
 
         /// <summary>
@@ -87,35 +95,47 @@ namespace Plugin.Share
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task ShareLink(string url, string message = null, string title = null)
         {
-            ShareInternal(title, message, url);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            var shareOptions = new ShareOptions();
+            shareOptions.ChooserTitle = title;
+
+            return Share(shareMessage, shareOptions);
         }
 
         /// <summary>
-        /// Share data with compatible services
+        /// Share a message with compatible services
         /// </summary>
-        /// <param name="title">Title to share</param>
         /// <param name="message">Message to share</param>
-        /// <param name="url">Link to share</param>
-        void ShareInternal(string title, string message, string url)
+        /// <param name="options">Platform specific options</param>
+        /// <returns>awaitable Task</returns>
+        public async Task Share(ShareMessage message, ShareOptions options = null)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             var items = new List<string>();
-            if (message != null)
-                items.Add(message);
-            if (url != null)
-                items.Add(url);
+            if (message.Text != null)
+                items.Add(message.Text);
+            if (message.Url != null)
+                items.Add(message.Url);
 
             var intent = new Intent(Intent.ActionSend);
             intent.SetType("text/plain");
             intent.PutExtra(Intent.ExtraText, string.Join(Environment.NewLine, items));
-            if (title != null)
-                intent.PutExtra(Intent.ExtraSubject, title);
+            if (message.Title != null)
+                intent.PutExtra(Intent.ExtraSubject, message.Title);
 
-            var chooserIntent = Intent.CreateChooser(intent, title);
+            var chooserIntent = Intent.CreateChooser(intent, options?.ChooserTitle);
             chooserIntent.SetFlags(ActivityFlags.ClearTop);
             chooserIntent.SetFlags(ActivityFlags.NewTask);
-            Android.App.Application.Context.StartActivity(chooserIntent);
+            Application.Context.StartActivity(chooserIntent);
         }
 
         /// <summary>

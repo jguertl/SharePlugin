@@ -42,6 +42,8 @@
     <Compile Include="IShare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShareColor.cs" />
+    <Compile Include="ShareMessage.cs" />
+    <Compile Include="ShareOptions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
