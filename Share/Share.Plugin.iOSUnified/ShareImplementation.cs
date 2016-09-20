@@ -47,7 +47,7 @@ namespace Plugin.Share
 
                 if ((options?.UseSafariWebViewController ?? false) && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
-                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafairReaderMode ?? false);
+                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafariReaderMode ?? false);
                     var vc = GetVisibleViewController();
 
                     if (sfViewController.PopoverPresentationController != null)
