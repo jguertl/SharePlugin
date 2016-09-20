@@ -27,15 +27,18 @@ namespace Plugin.Share
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        public async Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(url));
+
+                return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Unable to open browser task: " + ex.Message);
+                Debug.WriteLine("Unable to open browser: " + ex.Message);
+                return false;
             }
         }
 
@@ -49,7 +52,7 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task Share(string text, string title = null)
+        public Task<bool> Share(string text, string title = null)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -66,7 +69,7 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task ShareLink(string url, string message = null, string title = null)
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -82,20 +85,30 @@ namespace Plugin.Share
         /// <param name="message">Message to share</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(ShareMessage message, ShareOptions options = null)
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            title = message.Title;
-            text = message.Text;
-            url = message.Url;
-            if (dataTransferManager == null)
+            try
             {
-                dataTransferManager = DataTransferManager.GetForCurrentView();
-                dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareTextHandler);
+                title = message.Title;
+                text = message.Text;
+                url = message.Url;
+                if (dataTransferManager == null)
+                {
+                    dataTransferManager = DataTransferManager.GetForCurrentView();
+                    dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareTextHandler);
+                }
+                DataTransferManager.ShowShareUI();
+
+                return Task.FromResult(true);
             }
-            DataTransferManager.ShowShareUI();
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Unable to share: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         private void ShareTextHandler(DataTransferManager sender, DataRequestedEventArgs e)
@@ -118,7 +131,7 @@ namespace Plugin.Share
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Unable to share text: " + ex);
+                Debug.WriteLine("Unable to share: " + ex.Message);
             }
         }
 
@@ -131,12 +144,21 @@ namespace Plugin.Share
         public Task<bool> SetClipboardText(string text, string label = null)
         {
 #if WINDOWS_UWP || WINDOWS_APP
-            var dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetText(text);
+            try
+            {
+                var dataPackage = new DataPackage();
+                dataPackage.RequestedOperation = DataPackageOperation.Copy;
+                dataPackage.SetText(text);
 
-            Clipboard.SetContent(dataPackage);
-            return Task.FromResult(true);
+                Clipboard.SetContent(dataPackage);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
+            }
 #else
             return Task.FromResult(false);
 #endif

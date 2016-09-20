@@ -15,7 +15,7 @@ namespace Plugin.Share.Abstractions
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        Task OpenBrowser(string url, BrowserOptions options = null);
+        Task<bool> OpenBrowser(string url, BrowserOptions options = null);
 
         /// <summary>
         /// Simply share text with compatible services
@@ -24,7 +24,7 @@ namespace Plugin.Share.Abstractions
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        Task Share(string text, string title = null);
+        Task<bool> Share(string text, string title = null);
 
         /// <summary>
         /// Share a link url with compatible services
@@ -34,7 +34,7 @@ namespace Plugin.Share.Abstractions
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        Task ShareLink(string url, string message = null, string title = null);
+        Task<bool> ShareLink(string url, string message = null, string title = null);
 
         /// <summary>
         /// Share a message with compatible services
@@ -42,7 +42,7 @@ namespace Plugin.Share.Abstractions
         /// <param name="message">Message to share</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        Task Share(ShareMessage message, ShareOptions options = null);
+        Task<bool> Share(ShareMessage message, ShareOptions options = null);
 
         /// <summary>
         /// Sets text on the clipboard

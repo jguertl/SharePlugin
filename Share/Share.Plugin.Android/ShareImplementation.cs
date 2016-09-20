@@ -29,7 +29,7 @@ namespace Plugin.Share
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        public Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -62,10 +62,12 @@ namespace Plugin.Share
                     intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));
                 }
 
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Unable to open browser: " + ex.Message);
+                return Task.FromResult(false);
             }
         }
 
@@ -76,7 +78,7 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task Share(string text, string title = null)
+        public Task<bool> Share(string text, string title = null)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -96,7 +98,7 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task ShareLink(string url, string message = null, string title = null)
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -115,27 +117,37 @@ namespace Plugin.Share
         /// <param name="message">Message to share</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(ShareMessage message, ShareOptions options = null)
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            var items = new List<string>();
-            if (message.Text != null)
-                items.Add(message.Text);
-            if (message.Url != null)
-                items.Add(message.Url);
+            try
+            {
+                var items = new List<string>();
+                if (message.Text != null)
+                    items.Add(message.Text);
+                if (message.Url != null)
+                    items.Add(message.Url);
 
-            var intent = new Intent(Intent.ActionSend);
-            intent.SetType("text/plain");
-            intent.PutExtra(Intent.ExtraText, string.Join(Environment.NewLine, items));
-            if (message.Title != null)
-                intent.PutExtra(Intent.ExtraSubject, message.Title);
+                var intent = new Intent(Intent.ActionSend);
+                intent.SetType("text/plain");
+                intent.PutExtra(Intent.ExtraText, string.Join(Environment.NewLine, items));
+                if (message.Title != null)
+                    intent.PutExtra(Intent.ExtraSubject, message.Title);
 
-            var chooserIntent = Intent.CreateChooser(intent, options?.ChooserTitle);
-            chooserIntent.SetFlags(ActivityFlags.ClearTop);
-            chooserIntent.SetFlags(ActivityFlags.NewTask);
-            Application.Context.StartActivity(chooserIntent);
+                var chooserIntent = Intent.CreateChooser(intent, options?.ChooserTitle);
+                chooserIntent.SetFlags(ActivityFlags.ClearTop);
+                chooserIntent.SetFlags(ActivityFlags.NewTask);
+                Application.Context.StartActivity(chooserIntent);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to share: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         /// <summary>
@@ -159,20 +171,19 @@ namespace Plugin.Share
                     var clipboard = (ClipboardManager)Application.Context.GetSystemService(Context.ClipboardService);
                     clipboard.PrimaryClip = ClipData.NewPlainText(label ?? string.Empty, text);
                 }
+
                 return Task.FromResult(true);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Unable to copy to clipboard: " + ex);
+                Console.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
             }
-
-            return Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
         public bool SupportsClipboard => true;
-
     }
 }

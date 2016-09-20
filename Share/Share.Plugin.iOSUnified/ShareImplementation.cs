@@ -38,7 +38,7 @@ namespace Plugin.Share
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        public async Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -61,12 +61,14 @@ namespace Plugin.Share
                 {
                     UIApplication.SharedApplication.OpenUrl(new NSUrl(url));
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Unable to open browser: " + ex.Message);
+                return false;
             }
-
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task Share(string text, string title = null)
+        public Task<bool> Share(string text, string title = null)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -93,7 +95,7 @@ namespace Plugin.Share
         /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task Share(string text, string title = null, params NSString[] excludedActivityTypes)
+        public Task<bool> Share(string text, string title = null, params NSString[] excludedActivityTypes)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -113,7 +115,7 @@ namespace Plugin.Share
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task ShareLink(string url, string message = null, string title = null)
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -132,7 +134,7 @@ namespace Plugin.Share
         /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
         /// <returns>awaitable Task</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
+        public Task<bool> ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
         {
             var shareMessage = new ShareMessage();
             shareMessage.Title = title;
@@ -151,7 +153,7 @@ namespace Plugin.Share
         /// <param name="message">Message to share</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>awaitable Task</returns>
-        public async Task Share(ShareMessage message, ShareOptions options = null)
+        public async Task<bool> Share(ShareMessage message, ShareOptions options = null)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
@@ -185,10 +187,13 @@ namespace Plugin.Share
                 }
 
                 await vc.PresentViewControllerAsync(activityController, true);
+
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to share text" + ex.Message);
+                Console.WriteLine("Unable to share: " + ex.Message);
+                return false;
             }
         }
 
@@ -224,14 +229,22 @@ namespace Plugin.Share
         /// <returns></returns>
         public Task<bool> SetClipboardText(string text, string label = null)
         {
-            UIPasteboard.General.String = text;
-            return Task.FromResult(true);
+            try
+            {
+                UIPasteboard.General.String = text;
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
         public bool SupportsClipboard => true;
-
     }
 }
