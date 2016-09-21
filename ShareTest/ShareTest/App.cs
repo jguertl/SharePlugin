@@ -50,7 +50,7 @@ namespace ShareTest
 
             button2.Clicked += (sender, args) =>
             {
-                CrossShare.Current.OpenBrowser("http://motzcod.es");
+                CrossShare.Current.OpenBrowser("http://motzcod.es", new BrowserOptions() { SafariBarTintColor = new ShareColor(200, 0, 0), SafariControlTintColor = new ShareColor(255, 255, 255), ChromeToolbarColor = new ShareColor(200, 0, 0) });
             };
 
             buttonShare.Clicked += (sender, args) =>
