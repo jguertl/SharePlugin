@@ -1,5 +1,6 @@
 using Foundation;
 using Plugin.Share.Abstractions;
+using SafariServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,22 @@ namespace Plugin.Share
 
                 if ((options?.UseSafariWebViewController ?? false) && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
-                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafariReaderMode ?? false);
+                    // create safari controller
+                    var sfViewController = new SFSafariViewController(new NSUrl(url), options?.UseSafariReaderMode ?? false);
+
+                    // apply custom tint colors
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+                    {
+                        var barTintColor = options?.SafariBarTintColor;
+                        if (barTintColor != null)
+                            sfViewController.PreferredBarTintColor = barTintColor.ToUIColor();
+
+                        var controlTintColor = options?.SafariControlTintColor;
+                        if (controlTintColor != null)
+                            sfViewController.PreferredControlTintColor = controlTintColor.ToUIColor();
+                    }
+
+                    // show safari controller
                     var vc = GetVisibleViewController();
 
                     if (sfViewController.PopoverPresentationController != null)

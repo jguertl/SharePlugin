@@ -37,6 +37,7 @@
       <Link>CrossShare.cs</Link>
     </Compile>
     <Compile Include="ShareActivityItemSource.cs" />
+    <Compile Include="ShareColorExtensions.cs" />
     <Compile Include="ShareImplementation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

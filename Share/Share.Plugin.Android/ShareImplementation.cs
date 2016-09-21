@@ -43,20 +43,16 @@ namespace Plugin.Share
 
                     intent.SetFlags(ActivityFlags.ClearTop);
                     intent.SetFlags(ActivityFlags.NewTask);
-                    Android.App.Application.Context.StartActivity(intent);
+                    Application.Context.StartActivity(intent);
                 }
                 else
                 {
                     var tabsBuilder = new CustomTabsIntent.Builder();
                     tabsBuilder.SetShowTitle(options?.ChromeShowTitle ?? false);
+
                     var toolbarColor = options?.ChromeToolbarColor;
                     if (toolbarColor != null)
-                    {
-                        tabsBuilder.SetToolbarColor(Android.Graphics.Color.Argb(toolbarColor.A,
-                            toolbarColor.R,
-                            toolbarColor.G,
-                            toolbarColor.B));
-                    }
+                        tabsBuilder.SetToolbarColor(toolbarColor.ToNativeColor());
 
                     var intent = tabsBuilder.Build();
                     intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));
