@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Plugin.Share.Abstractions
 {
+    /// <summary>
+    /// Platform specific Share Options
+    /// </summary>
     public class ShareOptions
     {
         /// <summary>

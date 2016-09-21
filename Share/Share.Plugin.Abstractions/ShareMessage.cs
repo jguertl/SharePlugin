@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Plugin.Share.Abstractions
 {
+    /// <summary>
+    /// Message object to share with compatible services
+    /// </summary>
     public class ShareMessage
     {
         /// <summary>
