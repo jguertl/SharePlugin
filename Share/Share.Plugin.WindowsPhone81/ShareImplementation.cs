@@ -16,6 +16,7 @@ namespace Plugin.Share
         /// For linker
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Calling Init() is no longer required")]
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
