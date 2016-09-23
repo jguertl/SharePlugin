@@ -23,15 +23,10 @@ namespace Plugin.Share
             var test = DateTime.UtcNow;
         }
 
-        static ShareImplementation()
-        {
-            ExcludedUIActivityTypes = new List<NSString> { UIActivityType.PostToFacebook };
-        }
-
         /// <summary>
         /// Gets or sets the UIActivityTypes that should not be displayed.
         /// </summary>
-        public static List<NSString> ExcludedUIActivityTypes { get; set; }
+        public static List<NSString> ExcludedUIActivityTypes { get; set; } = new List<NSString> { UIActivityType.PostToFacebook };
 
         /// <summary>
         /// Open a browser to a specific url
@@ -108,7 +103,7 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
+        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
         public Task<bool> Share(string text, string title = null, params NSString[] excludedActivityTypes)
@@ -117,10 +112,7 @@ namespace Plugin.Share
             shareMessage.Title = title;
             shareMessage.Text = text;
 
-            var shareOptions = new ShareOptions();
-            shareOptions.ExcludedUIActivityTypes = excludedActivityTypes?.Select(x => (string)x).ToArray();
-
-            return Share(shareMessage, shareOptions);
+            return Share(shareMessage, null, excludedActivityTypes);
         }
 
         /// <summary>
@@ -147,7 +139,7 @@ namespace Plugin.Share
         /// <param name="url">Link to share</param>
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
+        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
         [Obsolete("Use Share(ShareMessage, ShareOptions)")]
         public Task<bool> ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
@@ -157,10 +149,7 @@ namespace Plugin.Share
             shareMessage.Text = message;
             shareMessage.Url = url;
 
-            var shareOptions = new ShareOptions();
-            shareOptions.ExcludedUIActivityTypes = excludedActivityTypes?.Select(x => (string)x).ToArray();
-
-            return Share(shareMessage, shareOptions);
+            return Share(shareMessage, null, excludedActivityTypes);
         }
 
         /// <summary>
@@ -169,7 +158,19 @@ namespace Plugin.Share
         /// <param name="message">Message to share</param>
         /// <param name="options">Platform specific options</param>
         /// <returns>True if the operation was successful, false otherwise</returns>
-        public async Task<bool> Share(ShareMessage message, ShareOptions options = null)
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
+        {
+            return Share(message, options, null);
+        }
+
+        /// <summary>
+        /// Share a message with compatible services
+        /// </summary>
+        /// <param name="message">Message to share</param>
+        /// <param name="options">Platform specific options</param>
+        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        private async Task<bool> Share(ShareMessage message, ShareOptions options = null, params NSString[] excludedActivityTypes)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
@@ -187,7 +188,14 @@ namespace Plugin.Share
                 var activityController = new UIActivityViewController(items.ToArray(), null);
 
                 // set excluded activity types
-                var excludedActivityTypes = options?.ExcludedUIActivityTypes?.Select(x => (NSString)x).ToArray() ?? ExcludedUIActivityTypes?.ToArray();
+                if (excludedActivityTypes == null)
+                    // use ShareOptions.ExcludedUIActivityTypes
+                    excludedActivityTypes = options?.ExcludedUIActivityTypes?.Select(x => GetUIActivityType(x)).Where(x => x != null).ToArray();
+
+                if (excludedActivityTypes == null)
+                    // use ShareImplementation.ExcludedUIActivityTypes
+                    excludedActivityTypes = ExcludedUIActivityTypes?.ToArray();
+
                 if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
                     activityController.ExcludedActivityTypes = excludedActivityTypes;
 
@@ -235,6 +243,54 @@ namespace Plugin.Share
             }
 
             return rootController.PresentedViewController;
+        }
+
+        /// <summary>
+        /// Converts the <see cref="ShareUIActivityType"/> to its native representation.
+        /// Returns null if the activity type is invalid or not supported on the current platform.
+        /// </summary>
+        /// <param name="type">The activity type</param>
+        /// <returns>The native representation of the activity type or null</returns>
+        NSString GetUIActivityType(ShareUIActivityType type)
+        {
+            switch (type)
+            {
+                case ShareUIActivityType.AssignToContact:
+                    return UIActivityType.AssignToContact;
+                case ShareUIActivityType.CopyToPasteboard:
+                    return UIActivityType.CopyToPasteboard;
+                case ShareUIActivityType.Mail:
+                    return UIActivityType.Mail;
+                case ShareUIActivityType.Message:
+                    return UIActivityType.Message;
+                case ShareUIActivityType.PostToFacebook:
+                    return UIActivityType.PostToFacebook;
+                case ShareUIActivityType.PostToTwitter:
+                    return UIActivityType.PostToTwitter;
+                case ShareUIActivityType.PostToWeibo:
+                    return UIActivityType.PostToWeibo;
+                case ShareUIActivityType.Print:
+                    return UIActivityType.Print;
+                case ShareUIActivityType.SaveToCameraRoll:
+                    return UIActivityType.SaveToCameraRoll;
+
+                case ShareUIActivityType.AddToReadingList:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.AddToReadingList : null;
+                case ShareUIActivityType.AirDrop:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.AirDrop : null;
+                case ShareUIActivityType.PostToFlickr:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.PostToFlickr : null;
+                case ShareUIActivityType.PostToTencentWeibo:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.PostToTencentWeibo : null;
+                case ShareUIActivityType.PostToVimeo:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.PostToVimeo : null;
+
+                case ShareUIActivityType.OpenInIBooks:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(9, 0) ? UIActivityType.OpenInIBooks : null;
+
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
