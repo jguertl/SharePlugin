@@ -66,7 +66,7 @@ namespace Plugin.Share
                     {
                         sfViewController.PopoverPresentationController.SourceView = vc.View;
                     }
-
+                    
                     await vc.PresentViewControllerAsync(sfViewController, true);
                 }
                 else

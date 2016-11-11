@@ -33,6 +33,16 @@ namespace ShareTest
                 Text = "Share"
             };
 
+            var buttonNewPage = new Button
+            {
+                Text = "Modal Page"
+            };
+
+            buttonNewPage.Clicked += async (sender, args) =>
+            {
+                await Application.Current.MainPage.Navigation.PushModalAsync(new Page1());
+            };
+
             var switchTitle = new Switch { IsToggled = true };
             var switchText = new Switch { IsToggled = true };
             var switchUrl = new Switch { IsToggled = true };
@@ -87,6 +97,7 @@ namespace ShareTest
                         button,
                         button1,
                         button2,
+                        buttonNewPage,
                         new Label
                         {
                             XAlign = TextAlignment.Center,

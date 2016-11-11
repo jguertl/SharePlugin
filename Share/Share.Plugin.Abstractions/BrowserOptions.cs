@@ -21,16 +21,7 @@ namespace Plugin.Share.Abstractions
         /// Default is false.
         /// </summary>
         public bool UseSafariReaderMode { get; set; } = false;
-        /// <summary>
-        /// iOS: Gets or sets to use reader mode (good for markdown files).
-        /// Default is false.
-        /// </summary>
-        [Obsolete("Use UseSafariReaderMode")]
-        public bool UseSafairReaderMode
-        {
-            get { return UseSafariReaderMode; }
-            set { UseSafariReaderMode = value; }
-        }
+        
         /// <summary>
         /// iOS: Gets or sets the color to tint the background of the navigation bar and the toolbar (iOS 10+ only).
         /// If null (default) the default color will be used.
