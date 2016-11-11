@@ -59,6 +59,7 @@
       <Link>CrossShare.cs</Link>
     </Compile>
     <Compile Include="MainApplication.cs" />
+    <Compile Include="ShareColorExtensions.cs" />
     <Compile Include="ShareImplementation.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

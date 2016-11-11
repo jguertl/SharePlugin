@@ -16,6 +16,7 @@ namespace Plugin.Share
         /// For linker
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Calling Init() is no longer required")]
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -26,8 +27,8 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
-        /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -37,10 +38,12 @@ namespace Plugin.Share
 
                 Deployment.Current.Dispatcher.BeginInvoke(webBrowserTask.Show);
 
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to open browser task: " + ex.Message);
+                Console.WriteLine("Unable to open browser: " + ex.Message);
+                return Task.FromResult(false);
             }
         }
 
@@ -49,15 +52,15 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> Share(string text, string title = null)
         {
-            var task = new ShareStatusTask
-            {
-                Status = text ?? string.Empty
-            };
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
 
-            Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+            return Share(shareMessage);
         }
 
         /// <summary>
@@ -66,38 +69,82 @@ namespace Plugin.Share
         /// <param name="url">Link to share</param>
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
-            try
-            {
-                var task = new ShareLinkTask
-                {
-                    Message = message ?? string.Empty,
-                    LinkUri = new Uri(url),
-                    Title = title ?? string.Empty
-                };
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
 
-                Deployment.Current.Dispatcher.BeginInvoke(task.Show);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Unable to create share link task: " + ex);
-                return;
-            }
-
+            return Share(shareMessage);
         }
 
         /// <summary>
-        /// Sets text on the clipboard
+        /// Share a message with compatible services
+        /// </summary>
+        /// <param name="message">Message to share</param>
+        /// <param name="options">Platform specific options</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            try
+            {
+                if (message.Url == null)
+                {
+                    // ShareStatusTask
+                    var task = new ShareStatusTask
+                    {
+                        Status = message.Text ?? string.Empty
+                    };
+
+                    Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+                }
+                else
+                {
+                    // ShareLinkTask
+                    var task = new ShareLinkTask
+                    {
+                        Title = message.Title ?? string.Empty,
+                        Message = message.Text ?? string.Empty,
+                        LinkUri = new Uri(message.Url)
+                    };
+
+                    Deployment.Current.Dispatcher.BeginInvoke(task.Show);
+                }
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to share: " + ex.Message);
+                return Task.FromResult(false);
+            }
+        }
+
+        /// <summary>
+        /// Sets text of the clipboard
         /// </summary>
         /// <param name="text">Text to set</param>
         /// <param name="label">Label to display (not required, Android only)</param>
-        /// <returns></returns>
+        /// <returns>True if the operation was successful, false otherwise</returns>
         public Task<bool> SetClipboardText(string text, string label = null)
         {
-            Clipboard.SetText(text);
-            return Task.FromResult(true);
+            try
+            {
+                Clipboard.SetText(text);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         /// <summary>

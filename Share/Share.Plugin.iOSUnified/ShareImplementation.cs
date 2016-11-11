@@ -1,5 +1,6 @@
 using Foundation;
 using Plugin.Share.Abstractions;
+using SafariServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,28 +18,24 @@ namespace Plugin.Share
         /// For linker
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Calling Init() is no longer required")]
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
         }
 
-        static ShareImplementation()
-        {
-            ExcludedUIActivityTypes = new List<NSString> { UIActivityType.PostToFacebook };
-        }
-
         /// <summary>
-        /// Gets or sets the ExcludedUIActivityTypes from sharing links or text
+        /// Gets or sets the UIActivityTypes that should not be displayed.
         /// </summary>
-        public static List<NSString> ExcludedUIActivityTypes { get; set; }
+        public static List<NSString> ExcludedUIActivityTypes { get; set; } = new List<NSString> { UIActivityType.PostToFacebook };
 
         /// <summary>
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
-        /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public async Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -47,7 +44,22 @@ namespace Plugin.Share
 
                 if ((options?.UseSafariWebViewController ?? false) && UIDevice.CurrentDevice.CheckSystemVersion(9, 0))
                 {
-                    var sfViewController = new SafariServices.SFSafariViewController(new NSUrl(url), options?.UseSafairReaderMode ?? false);
+                    // create safari controller
+                    var sfViewController = new SFSafariViewController(new NSUrl(url), options?.UseSafariReaderMode ?? false);
+
+                    // apply custom tint colors
+                    if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+                    {
+                        var barTintColor = options?.SafariBarTintColor;
+                        if (barTintColor != null)
+                            sfViewController.PreferredBarTintColor = barTintColor.ToUIColor();
+
+                        var controlTintColor = options?.SafariControlTintColor;
+                        if (controlTintColor != null)
+                            sfViewController.PreferredControlTintColor = controlTintColor.ToUIColor();
+                    }
+
+                    // show safari controller
                     var vc = GetVisibleViewController();
 
                     if (sfViewController.PopoverPresentationController != null)
@@ -61,12 +73,14 @@ namespace Plugin.Share
                 {
                     UIApplication.SharedApplication.OpenUrl(new NSUrl(url));
                 }
+
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Unable to open browser: " + ex.Message);
+                return false;
             }
-
         }
 
         /// <summary>
@@ -74,11 +88,15 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> Share(string text, string title = null)
         {
-            var excluded = ExcludedUIActivityTypes == null ? null : ExcludedUIActivityTypes.ToArray();
-            await Share(text, title, excluded);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
+
+            return Share(shareMessage);
         }
 
         /// <summary>
@@ -86,11 +104,16 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
-        /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null, params NSString[] excludedActivityTypes)
+        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> Share(string text, string title = null, params NSString[] excludedActivityTypes)
         {
-            await ShareInternal(title, text, null, excludedActivityTypes);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
+
+            return Share(shareMessage, null, excludedActivityTypes);
         }
 
         /// <summary>
@@ -99,11 +122,16 @@ namespace Plugin.Share
         /// <param name="url">Link to share</param>
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
-            var excluded = ExcludedUIActivityTypes == null ? null : ExcludedUIActivityTypes.ToArray();
-            await ShareLink(url, message, title, excluded);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            return Share(shareMessage);
         }
 
         /// <summary>
@@ -112,36 +140,67 @@ namespace Plugin.Share
         /// <param name="url">Link to share</param>
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <param name="excludedActivityTypes">UIActivityType to exclude</param>
-        /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
+        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
         {
-            await ShareInternal(title, message, url, excludedActivityTypes);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            return Share(shareMessage, null, excludedActivityTypes);
         }
 
         /// <summary>
-        /// Share data with compatible services
+        /// Share a message with compatible services
         /// </summary>
-        /// <param name="title">Title to share</param>
         /// <param name="message">Message to share</param>
-        /// <param name="url">Link to share</param>
-        /// <param name="excludedActivityTypes">UIActivityType to excluded</param>
-        /// <returns>awaitable Task</returns>
-        async Task ShareInternal(string title, string message, string url, NSString[] excludedActivityTypes)
+        /// <param name="options">Platform specific options</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
         {
+            return Share(message, options, null);
+        }
+
+        /// <summary>
+        /// Share a message with compatible services
+        /// </summary>
+        /// <param name="message">Message to share</param>
+        /// <param name="options">Platform specific options</param>
+        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        private async Task<bool> Share(ShareMessage message, ShareOptions options = null, params NSString[] excludedActivityTypes)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             try
             {
+                // create activity items
                 var items = new List<NSObject>();
-                if (message != null)
-                    items.Add(new ShareActivityItemSource(new NSString(message), title));
-                if (url != null)
-                    items.Add(new ShareActivityItemSource(NSUrl.FromString(url), title));
+                if (message.Text != null)
+                    items.Add(new ShareActivityItemSource((NSString)message.Text, message.Title));
+                if (message.Url != null)
+                    items.Add(new ShareActivityItemSource(NSUrl.FromString(message.Url), message.Title));
 
+                // create activity controller
                 var activityController = new UIActivityViewController(items.ToArray(), null);
+
+                // set excluded activity types
+                if (excludedActivityTypes == null)
+                    // use ShareOptions.ExcludedUIActivityTypes
+                    excludedActivityTypes = options?.ExcludedUIActivityTypes?.Select(x => GetUIActivityType(x)).Where(x => x != null).ToArray();
+
+                if (excludedActivityTypes == null)
+                    // use ShareImplementation.ExcludedUIActivityTypes
+                    excludedActivityTypes = ExcludedUIActivityTypes?.ToArray();
 
                 if (excludedActivityTypes != null && excludedActivityTypes.Length > 0)
                     activityController.ExcludedActivityTypes = excludedActivityTypes;
 
+                // show activity controller
                 var vc = GetVisibleViewController();
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
@@ -153,10 +212,13 @@ namespace Plugin.Share
                 }
 
                 await vc.PresentViewControllerAsync(activityController, true);
+
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Unable to share text" + ex.Message);
+                Console.WriteLine("Unable to share: " + ex.Message);
+                return false;
             }
         }
 
@@ -185,21 +247,77 @@ namespace Plugin.Share
         }
 
         /// <summary>
-        /// Sets text on the clipboard
+        /// Converts the <see cref="ShareUIActivityType"/> to its native representation.
+        /// Returns null if the activity type is invalid or not supported on the current platform.
+        /// </summary>
+        /// <param name="type">The activity type</param>
+        /// <returns>The native representation of the activity type or null</returns>
+        NSString GetUIActivityType(ShareUIActivityType type)
+        {
+            switch (type)
+            {
+                case ShareUIActivityType.AssignToContact:
+                    return UIActivityType.AssignToContact;
+                case ShareUIActivityType.CopyToPasteboard:
+                    return UIActivityType.CopyToPasteboard;
+                case ShareUIActivityType.Mail:
+                    return UIActivityType.Mail;
+                case ShareUIActivityType.Message:
+                    return UIActivityType.Message;
+                case ShareUIActivityType.PostToFacebook:
+                    return UIActivityType.PostToFacebook;
+                case ShareUIActivityType.PostToTwitter:
+                    return UIActivityType.PostToTwitter;
+                case ShareUIActivityType.PostToWeibo:
+                    return UIActivityType.PostToWeibo;
+                case ShareUIActivityType.Print:
+                    return UIActivityType.Print;
+                case ShareUIActivityType.SaveToCameraRoll:
+                    return UIActivityType.SaveToCameraRoll;
+
+                case ShareUIActivityType.AddToReadingList:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.AddToReadingList : null;
+                case ShareUIActivityType.AirDrop:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.AirDrop : null;
+                case ShareUIActivityType.PostToFlickr:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.PostToFlickr : null;
+                case ShareUIActivityType.PostToTencentWeibo:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.PostToTencentWeibo : null;
+                case ShareUIActivityType.PostToVimeo:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(7, 0) ? UIActivityType.PostToVimeo : null;
+
+                case ShareUIActivityType.OpenInIBooks:
+                    return UIDevice.CurrentDevice.CheckSystemVersion(9, 0) ? UIActivityType.OpenInIBooks : null;
+
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Sets text of the clipboard
         /// </summary>
         /// <param name="text">Text to set</param>
         /// <param name="label">Label to display (not required, Android only)</param>
-        /// <returns></returns>
+        /// <returns>True if the operation was successful, false otherwise</returns>
         public Task<bool> SetClipboardText(string text, string label = null)
         {
-            UIPasteboard.General.String = text;
-            return Task.FromResult(true);
+            try
+            {
+                UIPasteboard.General.String = text;
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
         public bool SupportsClipboard => true;
-
     }
 }

@@ -16,6 +16,7 @@ namespace Plugin.Share
         /// For linker
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Calling Init() is no longer required")]
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -26,20 +27,23 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
-        /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public async Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
                 await Windows.System.Launcher.LaunchUriAsync(new Uri(url));
+
+                return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Unable to open browser task: " + ex.Message);
+                Debug.WriteLine("Unable to open browser: " + ex.Message);
+                return false;
             }
         }
 
-        string text, title, url;
+        string title, text, url;
         DataTransferManager dataTransferManager;
 
         /// <summary>
@@ -47,9 +51,16 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public Task Share(string text, string title = null) => ShareLink(null, text, title);
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> Share(string text, string title = null)
+        {
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
 
+            return Share(shareMessage);
+        }
 
         /// <summary>
         /// Share a link url with compatible services
@@ -57,18 +68,48 @@ namespace Plugin.Share
         /// <param name="url">Link to share</param>
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
-            this.text = message ?? string.Empty;
-            this.title = title ?? string.Empty;
-            this.url = url;
-            if (dataTransferManager == null)
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            return Share(shareMessage);
+        }
+
+        /// <summary>
+        /// Share a message with compatible services
+        /// </summary>
+        /// <param name="message">Message to share</param>
+        /// <param name="options">Platform specific options</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            try
             {
-                dataTransferManager = DataTransferManager.GetForCurrentView();
-                dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareTextHandler);
+                title = message.Title;
+                text = message.Text;
+                url = message.Url;
+                if (dataTransferManager == null)
+                {
+                    dataTransferManager = DataTransferManager.GetForCurrentView();
+                    dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(this.ShareTextHandler);
+                }
+                DataTransferManager.ShowShareUI();
+
+                return Task.FromResult(true);
             }
-            DataTransferManager.ShowShareUI();
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Unable to share: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         private void ShareTextHandler(DataTransferManager sender, DataRequestedEventArgs e)
@@ -76,45 +117,49 @@ namespace Plugin.Share
             try
             {
                 DataRequest request = e.Request;
+
                 // The Title is mandatory
-#if WINDOWS_UWP
-                request.Data.Properties.Title = title ?? Windows.ApplicationModel.Package.Current.DisplayName;
-#elif WINDOWS_APP
+#if WINDOWS_UWP || WINDOWS_APP
                 request.Data.Properties.Title = title ?? Windows.ApplicationModel.Package.Current.DisplayName;
 #else
                 request.Data.Properties.Title = title ?? string.Empty;
-
 #endif
 
-                if (!string.IsNullOrWhiteSpace(url))
-                {
-                  
+                if (text != null)
+                    request.Data.SetText(text);
+                if (url != null)
                     request.Data.SetWebLink(new Uri(url));
-
-                }
-                request.Data.SetText(text ?? string.Empty);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Debug.WriteLine("Unable to share text: " + ex);
+                Debug.WriteLine("Unable to share: " + ex.Message);
             }
         }
 
         /// <summary>
-        /// Sets text on the clipboard
+        /// Sets text of the clipboard
         /// </summary>
         /// <param name="text">Text to set</param>
         /// <param name="label">Label to display (not required, Android only)</param>
-        /// <returns></returns>
+        /// <returns>True if the operation was successful, false otherwise</returns>
         public Task<bool> SetClipboardText(string text, string label = null)
         {
 #if WINDOWS_UWP || WINDOWS_APP
-            var dataPackage = new DataPackage();
-            dataPackage.RequestedOperation = DataPackageOperation.Copy;
-            dataPackage.SetText(text);
+            try
+            {
+                var dataPackage = new DataPackage();
+                dataPackage.RequestedOperation = DataPackageOperation.Copy;
+                dataPackage.SetText(text);
 
-            Clipboard.SetContent(dataPackage);
-            return Task.FromResult(true);
+                Clipboard.SetContent(dataPackage);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
+            }
 #else
             return Task.FromResult(false);
 #endif

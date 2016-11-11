@@ -18,6 +18,7 @@ namespace Plugin.Share
         /// For linker
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Calling Init() is no longer required")]
         public static async Task Init()
         {
             var test = DateTime.UtcNow;
@@ -28,8 +29,8 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="url">Url to open</param>
         /// <param name="options">Platform specific options</param>
-        /// <returns>awaitable Task</returns>
-        public async Task OpenBrowser(string url, BrowserOptions options = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public Task<bool> OpenBrowser(string url, BrowserOptions options = null)
         {
             try
             {
@@ -43,29 +44,27 @@ namespace Plugin.Share
 
                     intent.SetFlags(ActivityFlags.ClearTop);
                     intent.SetFlags(ActivityFlags.NewTask);
-                    Android.App.Application.Context.StartActivity(intent);
+                    Application.Context.StartActivity(intent);
                 }
                 else
                 {
                     var tabsBuilder = new CustomTabsIntent.Builder();
                     tabsBuilder.SetShowTitle(options?.ChromeShowTitle ?? false);
+
                     var toolbarColor = options?.ChromeToolbarColor;
                     if (toolbarColor != null)
-                    {
-                        tabsBuilder.SetToolbarColor(Android.Graphics.Color.Argb(toolbarColor.A,
-                            toolbarColor.R,
-                            toolbarColor.G,
-                            toolbarColor.B));
-                    }
+                        tabsBuilder.SetToolbarColor(toolbarColor.ToNativeColor());
 
                     var intent = tabsBuilder.Build();
                     intent.LaunchUrl(CrossCurrentActivity.Current.Activity, Android.Net.Uri.Parse(url));
                 }
 
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Unable to open browser: " + ex.Message);
+                return Task.FromResult(false);
             }
         }
 
@@ -74,10 +73,18 @@ namespace Plugin.Share
         /// </summary>
         /// <param name="text">Text to share</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task Share(string text, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> Share(string text, string title = null)
         {
-            ShareInternal(title, text, null);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = text;
+
+            var shareOptions = new ShareOptions();
+            shareOptions.ChooserTitle = title;
+
+            return Share(shareMessage, shareOptions);
         }
 
         /// <summary>
@@ -86,44 +93,66 @@ namespace Plugin.Share
         /// <param name="url">Link to share</param>
         /// <param name="message">Message to include with the link</param>
         /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>awaitable Task</returns>
-        public async Task ShareLink(string url, string message = null, string title = null)
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
+        public Task<bool> ShareLink(string url, string message = null, string title = null)
         {
-            ShareInternal(title, message, url);
+            var shareMessage = new ShareMessage();
+            shareMessage.Title = title;
+            shareMessage.Text = message;
+            shareMessage.Url = url;
+
+            var shareOptions = new ShareOptions();
+            shareOptions.ChooserTitle = title;
+
+            return Share(shareMessage, shareOptions);
         }
 
         /// <summary>
-        /// Share data with compatible services
+        /// Share a message with compatible services
         /// </summary>
-        /// <param name="title">Title to share</param>
         /// <param name="message">Message to share</param>
-        /// <param name="url">Link to share</param>
-        void ShareInternal(string title, string message, string url)
+        /// <param name="options">Platform specific options</param>
+        /// <returns>True if the operation was successful, false otherwise</returns>
+        public Task<bool> Share(ShareMessage message, ShareOptions options = null)
         {
-            var items = new List<string>();
-            if (message != null)
-                items.Add(message);
-            if (url != null)
-                items.Add(url);
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
 
-            var intent = new Intent(Intent.ActionSend);
-            intent.SetType("text/plain");
-            intent.PutExtra(Intent.ExtraText, string.Join(Environment.NewLine, items));
-            if (title != null)
-                intent.PutExtra(Intent.ExtraSubject, title);
+            try
+            {
+                var items = new List<string>();
+                if (message.Text != null)
+                    items.Add(message.Text);
+                if (message.Url != null)
+                    items.Add(message.Url);
 
-            var chooserIntent = Intent.CreateChooser(intent, title);
-            chooserIntent.SetFlags(ActivityFlags.ClearTop);
-            chooserIntent.SetFlags(ActivityFlags.NewTask);
-            Android.App.Application.Context.StartActivity(chooserIntent);
+                var intent = new Intent(Intent.ActionSend);
+                intent.SetType("text/plain");
+                intent.PutExtra(Intent.ExtraText, string.Join(Environment.NewLine, items));
+                if (message.Title != null)
+                    intent.PutExtra(Intent.ExtraSubject, message.Title);
+
+                var chooserIntent = Intent.CreateChooser(intent, options?.ChooserTitle);
+                chooserIntent.SetFlags(ActivityFlags.ClearTop);
+                chooserIntent.SetFlags(ActivityFlags.NewTask);
+                Application.Context.StartActivity(chooserIntent);
+
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unable to share: " + ex.Message);
+                return Task.FromResult(false);
+            }
         }
 
         /// <summary>
-        /// Sets text on the clipboard
+        /// Sets text of the clipboard
         /// </summary>
         /// <param name="text">Text to set</param>
         /// <param name="label">Label to display (not required, Android only)</param>
-        /// <returns></returns>
+        /// <returns>True if the operation was successful, false otherwise</returns>
         public Task<bool> SetClipboardText(string text, string label = null)
         {
             try
@@ -139,20 +168,19 @@ namespace Plugin.Share
                     var clipboard = (ClipboardManager)Application.Context.GetSystemService(Context.ClipboardService);
                     clipboard.PrimaryClip = ClipData.NewPlainText(label ?? string.Empty, text);
                 }
+
                 return Task.FromResult(true);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Unable to copy to clipboard: " + ex);
+                Console.WriteLine("Unable to copy to clipboard: " + ex.Message);
+                return Task.FromResult(false);
             }
-
-            return Task.FromResult(false);
         }
 
         /// <summary>
         /// Gets if cliboard is supported
         /// </summary>
         public bool SupportsClipboard => true;
-
     }
 }
