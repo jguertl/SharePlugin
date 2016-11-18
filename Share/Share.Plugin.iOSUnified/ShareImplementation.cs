@@ -235,7 +235,7 @@ namespace Plugin.Share
 
             if (rootController.PresentedViewController is UINavigationController)
             {
-                return ((UINavigationController)rootController.PresentedViewController).TopViewController;
+                return ((UINavigationController)rootController.PresentedViewController).VisibleViewController;
             }
 
             if (rootController.PresentedViewController is UITabBarController)

@@ -82,7 +82,7 @@ namespace ShareTest
             };
 
             // The root page of your application
-            MainPage = new ContentPage
+            MainPage = new NavigationPage(new ContentPage
             {
                 Content = new StackLayout
                 {
@@ -126,7 +126,7 @@ namespace ShareTest
                         buttonShare
                     }
                 }
-            };
+            });
         }
 
         protected override void OnStart()
