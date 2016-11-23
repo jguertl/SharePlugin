@@ -20,11 +20,9 @@
            </group>
        </dependencies>
         <releaseNotes>
-       [4.0.0]
-       -Introduce Browser Options when opening the browser
-       -Now uses Chrome Custom Tabs on Android with customization
-       -More options for SFSafariWebViewController on iOS 9
-       -Breaking: Removed the SFSafariWebViewController static and moved it into Browser Options
+       [5.0.0-beta]
+       -Breaking changes: Re-configured all share calls. All code must be updated.
+       -See readme on the GitHub page
        </releaseNotes>
        <summary>Share Plugin for Xamarin and Windows to share text, link, or open a browser.</summary>
        <tags>share, open url, clipboard, sfsafariwebviewcontroller, chrome custom tabs, share text, share link, browser, xamarin, pcl, xam.pcl, windows phone, winphone, wp8, android, xamarin.forms, ios</tags>

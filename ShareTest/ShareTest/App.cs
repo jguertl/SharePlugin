@@ -50,12 +50,28 @@ namespace ShareTest
 
             button.Clicked += (sender, args) =>
             {
-                CrossShare.Current.Share("Follow @JamesMontemagno on Twitter", "Share");
+                CrossShare.Current.Share(new ShareMessage
+                {
+                    Text = "Follow @JamesMontemagno on Twitter",
+                    Title = "Share"
+                },
+                new ShareOptions
+                {
+                    ChooserTitle = "Chooser Title",
+                    ExcludedUIActivityTypes = new [] { ShareUIActivityType.PostToFacebook }
+                });
+                
             };
 
             button1.Clicked += (sender, args) =>
             {
-                CrossShare.Current.ShareLink("http://motzcod.es", "Checkout my blog", "MotzCod.es");
+                CrossShare.Current.Share(new Plugin.Share.Abstractions.ShareMessage
+                {
+                    Text = "MotzCod.es",
+                    Title = "heckout my blog",
+                    Url = "http://motzcod.es"
+                });
+                
             };
 
             button2.Clicked += (sender, args) =>

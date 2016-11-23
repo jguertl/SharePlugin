@@ -15,16 +15,6 @@ namespace Plugin.Share
     public class ShareImplementation : IShare
     {
         /// <summary>
-        /// For linker
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Calling Init() is no longer required")]
-        public static async Task Init()
-        {
-            var test = DateTime.UtcNow;
-        }
-
-        /// <summary>
         /// Open a browser to a specific url
         /// </summary>
         /// <param name="url">Url to open</param>
@@ -68,45 +58,6 @@ namespace Plugin.Share
             }
         }
 
-        /// <summary>
-        /// Simply share text with compatible services
-        /// </summary>
-        /// <param name="text">Text to share</param>
-        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>True if the operation was successful, false otherwise</returns>
-        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task<bool> Share(string text, string title = null)
-        {
-            var shareMessage = new ShareMessage();
-            shareMessage.Title = title;
-            shareMessage.Text = text;
-
-            var shareOptions = new ShareOptions();
-            shareOptions.ChooserTitle = title;
-
-            return Share(shareMessage, shareOptions);
-        }
-
-        /// <summary>
-        /// Share a link url with compatible services
-        /// </summary>
-        /// <param name="url">Link to share</param>
-        /// <param name="message">Message to include with the link</param>
-        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>True if the operation was successful, false otherwise</returns>
-        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task<bool> ShareLink(string url, string message = null, string title = null)
-        {
-            var shareMessage = new ShareMessage();
-            shareMessage.Title = title;
-            shareMessage.Text = message;
-            shareMessage.Url = url;
-
-            var shareOptions = new ShareOptions();
-            shareOptions.ChooserTitle = title;
-
-            return Share(shareMessage, shareOptions);
-        }
 
         /// <summary>
         /// Share a message with compatible services

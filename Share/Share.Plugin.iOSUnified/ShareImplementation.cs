@@ -14,15 +14,6 @@ namespace Plugin.Share
     /// </summary>
     public class ShareImplementation : IShare
     {
-        /// <summary>
-        /// For linker
-        /// </summary>
-        /// <returns></returns>
-        [Obsolete("Calling Init() is no longer required")]
-        public static async Task Init()
-        {
-            var test = DateTime.UtcNow;
-        }
 
         /// <summary>
         /// Gets or sets the UIActivityTypes that should not be displayed.
@@ -83,75 +74,6 @@ namespace Plugin.Share
             }
         }
 
-        /// <summary>
-        /// Simply share text with compatible services
-        /// </summary>
-        /// <param name="text">Text to share</param>
-        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>True if the operation was successful, false otherwise</returns>
-        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task<bool> Share(string text, string title = null)
-        {
-            var shareMessage = new ShareMessage();
-            shareMessage.Title = title;
-            shareMessage.Text = text;
-
-            return Share(shareMessage);
-        }
-
-        /// <summary>
-        /// Simply share text with compatible services
-        /// </summary>
-        /// <param name="text">Text to share</param>
-        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
-        /// <returns>True if the operation was successful, false otherwise</returns>
-        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task<bool> Share(string text, string title = null, params NSString[] excludedActivityTypes)
-        {
-            var shareMessage = new ShareMessage();
-            shareMessage.Title = title;
-            shareMessage.Text = text;
-
-            return Share(shareMessage, null, excludedActivityTypes);
-        }
-
-        /// <summary>
-        /// Share a link url with compatible services
-        /// </summary>
-        /// <param name="url">Link to share</param>
-        /// <param name="message">Message to include with the link</param>
-        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <returns>True if the operation was successful, false otherwise</returns>
-        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task<bool> ShareLink(string url, string message = null, string title = null)
-        {
-            var shareMessage = new ShareMessage();
-            shareMessage.Title = title;
-            shareMessage.Text = message;
-            shareMessage.Url = url;
-
-            return Share(shareMessage);
-        }
-
-        /// <summary>
-        /// Share a link url with compatible services
-        /// </summary>
-        /// <param name="url">Link to share</param>
-        /// <param name="message">Message to include with the link</param>
-        /// <param name="title">Title of the share popup on Android and Windows, email subject if sharing with mail apps</param>
-        /// <param name="excludedActivityTypes">UIActivityTypes that should not be displayed</param>
-        /// <returns>True if the operation was successful, false otherwise</returns>
-        [Obsolete("Use Share(ShareMessage, ShareOptions)")]
-        public Task<bool> ShareLink(string url, string message = null, string title = null, params NSString[] excludedActivityTypes)
-        {
-            var shareMessage = new ShareMessage();
-            shareMessage.Title = title;
-            shareMessage.Text = message;
-            shareMessage.Url = url;
-
-            return Share(shareMessage, null, excludedActivityTypes);
-        }
 
         /// <summary>
         /// Share a message with compatible services
@@ -181,7 +103,7 @@ namespace Plugin.Share
                 // create activity items
                 var items = new List<NSObject>();
                 if (message.Text != null)
-                    items.Add(new ShareActivityItemSource((NSString)message.Text, message.Title));
+                    items.Add(new ShareActivityItemSource(new NSString(message.Text), message.Title));
                 if (message.Url != null)
                     items.Add(new ShareActivityItemSource(NSUrl.FromString(message.Url), message.Title));
 

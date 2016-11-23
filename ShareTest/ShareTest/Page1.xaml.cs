@@ -16,7 +16,11 @@ namespace ShareTest
             InitializeComponent();
             ButtonShare.Clicked += delegate
             {
-                CrossShare.Current.Share("Follow @JamesMontemagno on Twitter", "Share");
+                CrossShare.Current.Share(new Plugin.Share.Abstractions.ShareMessage
+                {
+                    Text = "Follow @JamesMontemagno on Twitter",
+                    Title = "Share"
+                });
             };
 
             ButtonBrowser.Clicked += delegate

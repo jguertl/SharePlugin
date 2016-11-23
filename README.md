@@ -13,8 +13,7 @@ Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj
 
 |Platform|Supported|Version|
 | ------------------- | :-----------: | :------------------: |
-|Xamarin.iOS|Yes|iOS 7+|
-|Xamarin.iOS Unified|Yes|iOS 7+|
+|Xamarin.iOS|Yes|iOS 8+|
 |Xamarin.Android|Yes|API 14+|
 |Windows Phone Silverlight|Yes|8.0+|
 |Windows Phone RT|Yes|8.1+|
@@ -25,27 +24,61 @@ Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj
 
 Call **CrossShare.Current** from any project or PCL to gain access to APIs.
 
-**Share**
+Documentation below represents version 5.0+:
+
+**Share Message or Link**
 ```csharp
 /// <summary>
-/// Simply share text on compatible services
+/// Share a message with compatible services
 /// </summary>
-/// <param name="text">Text to share</param>
-/// <param name="title">Title of popup on share (not included in message)</param>
-/// <returns>awaitable Task</returns>
-Task Share(string text, string title = null);
+/// <param name="message">Message to share</param>
+/// <param name="options">Platform specific options</param>
+/// <returns>True if the operation was successful, false otherwise</returns>
+Task<bool> Share(ShareMessage message, ShareOptions options = null);
+```
+ShareMessage has the follow:
+```csharp
+/// <summary>
+/// Message object to share with compatible services
+/// </summary>
+public class ShareMessage
+{
+    /// <summary>
+    /// Gets or sets the title of the message. Used as email subject if sharing with mail apps.
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the text of the message.
+    /// </summary>
+    public string Text { get; set; }
+
+    /// <summary>
+    /// Gets or sets the link to include with the message.
+    /// </summary>
+    public string Url { get; set; }
+}
 ```
 
-**Share Link**
+ShareOptions gives you additional control over iOS and Android:
 ```csharp
 /// <summary>
-/// Share a link url with compatible services
+/// Platform specific Share Options
 /// </summary>
-/// <param name="url">Link to share</param>
-/// <param name="message">Message to share</param>
-/// <param name="title">Title of the popup</param>
-/// <returns>awaitable Task</returns>
-Task ShareLink(string url, string message = null, string title = null);
+public class ShareOptions
+{
+    /// <summary>
+    /// Android: Gets or sets the title of the app chooser popup.
+    /// If null (default) the system default title is used.
+    /// </summary>
+    public string ChooserTitle { get; set; } = null;
+
+    /// <summary>
+    /// iOS: Gets or sets the UIActivityTypes that should not be displayed.
+    /// If null (default) the value of <see cref="Plugin.Share.ShareImplementation.ExcludedUIActivityTypes"/> is used.
+    /// </summary>
+    public ShareUIActivityType[] ExcludedUIActivityTypes { get; set; } = null;
+}
 ```
 
 ## Clipboard
@@ -88,23 +121,35 @@ You can set a few device specific options by passing in BrowserOptions. Passing 
 public class BrowserOptions
 {
     /// <summary>
-    /// iOS: Gets or Set to use the SFSafariWebViewController on iOS 9+ (recommended)
-    /// Default is true
+    /// iOS: Gets or sets to use the SFSafariWebViewController on iOS 9+ (recommended).
+    /// Default is true.
     /// </summary>
     public bool UseSafariWebViewController { get; set; } = true;
     /// <summary>
-    /// iOS: Gets or sets to use reader mode (good for markdown files)
-    /// Default is false
+    /// iOS: Gets or sets to use reader mode (good for markdown files).
+    /// Default is false.
     /// </summary>
-    public bool UseSafairReaderMode { get; set; } = false;
+    public bool UseSafariReaderMode { get; set; } = false;
+        
     /// <summary>
-    /// Android: Gets or sets to display title as well as url in chrome custom tabs
+    /// iOS: Gets or sets the color to tint the background of the navigation bar and the toolbar (iOS 10+ only).
+    /// If null (default) the default color will be used.
+    /// </summary>
+    public ShareColor SafariBarTintColor { get; set; } = null;
+    /// <summary>
+    /// iOS: Gets or sets the color to tint the control buttons on the navigation bar and the toolbar (iOS 10+ only).
+    /// If null (default) the default color will be used.
+    /// </summary>
+    public ShareColor SafariControlTintColor { get; set; } = null;
+
+    /// <summary>
+    /// Android: Gets or sets to display title as well as url in chrome custom tabs.
     /// Default is true
     /// </summary>
     public bool ChromeShowTitle { get; set; } = true;
     /// <summary>
-    /// Android: Gets or sets the toolbar color of the chrome custom tabs
-    /// If null (default) will be default chrome color
+    /// Android: Gets or sets the toolbar color of the chrome custom tabs.
+    /// If null (default) the default color will be used.
     /// </summary>
     public ShareColor ChromeToolbarColor { get; set; } = null;
 }
@@ -130,6 +175,20 @@ Facebook stopped support for sharing, so we automatically remove them from the l
 In your ApplicationDelegate call:
 ```
 ShareImplementation.ExcludedUIActivityTypes = new List<string>{ UIActivityType.PostToFacebook};
+```
+
+or, you can specify this in your share options:
+```csharp
+CrossShare.Current.Share(new ShareMessage
+{
+	Text = "Follow @JamesMontemagno on Twitter",
+	Title = "Share"
+},
+new ShareOptions
+{
+	ChooserTitle = "Chooser Title",
+	ExcludedUIActivityTypes = new [] { ShareUIActivityType.PostToFacebook }
+});
 ```
 
 See this thread: http://stackoverflow.com/questions/29890747/ios-how-to-share-text-and-image-on-social-networks
