@@ -148,24 +148,24 @@ namespace Plugin.Share
         /// Gets the visible view controller.
         /// </summary>
         /// <returns>The visible view controller.</returns>
-        UIViewController GetVisibleViewController()
+        UIViewController GetVisibleViewController(UIViewController controller = null)
         {
-            var rootController = UIApplication.SharedApplication.KeyWindow.RootViewController;
+            controller = controller ?? UIApplication.SharedApplication.KeyWindow.RootViewController;
 
-            if (rootController.PresentedViewController == null)
-                return rootController;
+            if (controller.PresentedViewController == null)
+                return controller;
 
-            if (rootController.PresentedViewController is UINavigationController)
+            if (controller.PresentedViewController is UINavigationController)
             {
-                return ((UINavigationController)rootController.PresentedViewController).VisibleViewController;
+                return ((UINavigationController)controller.PresentedViewController).VisibleViewController;
             }
 
-            if (rootController.PresentedViewController is UITabBarController)
+            if (controller.PresentedViewController is UITabBarController)
             {
-                return ((UITabBarController)rootController.PresentedViewController).SelectedViewController;
+                return ((UITabBarController)controller.PresentedViewController).SelectedViewController;
             }
 
-            return rootController.PresentedViewController;
+            return GetVisibleViewController(controller.PresentedViewController);
         }
 
         /// <summary>
