@@ -9,6 +9,9 @@ Simple way to share a message or link, copy text to clipboard, or open a browser
 
 Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj5weexcjk6g9?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/shareplugin)
 
+#### Don't update the NuGet for CustomTabs
+I know you really want to upate the Custom Tabs NuGet for some reason, but don't as there are serious changes and I haven't built against it yet. Use the approved NuGet.
+
 **Platform Support**
 
 |Platform|Supported|Version|
