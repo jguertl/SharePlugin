@@ -10,5 +10,5 @@ build_script:
 
     powershell .\bootstrapper.ps1 -Target Default -Verbosity diagnostic
 artifacts:
-- path: ./*.nupkg
+- path: ./Build/nuget/*.nupkg
   name: NuGet
