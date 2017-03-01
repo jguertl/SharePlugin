@@ -20,6 +20,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{72960D27-CDC8-47F6-A733-0B9D9CA3E2E2}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		bootstrapper.ps1 = bootstrapper.ps1
+		build.cake = build.cake
+		install-android-sdk.ps1 = install-android-sdk.ps1
+		README.md = README.md
 		Share.Plugin.nuspec = Share.Plugin.nuspec
 	EndProjectSection
 EndProject

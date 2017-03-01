@@ -1,5 +1,5 @@
 Param(
-    [string]$Script = "build.cake",
+    [string]$Script = ".\build.cake",
     [string]$Target = "Default",
     [string]$Configuration = "Release",
     [ValidateSet("Quiet", "Minimal", "Normal", "Verbose", "Diagnostic")]
@@ -55,15 +55,16 @@ if (!(Test-Path $NUGET_EXE)) {
 
 # Make sure xamarin-component exists where we expect it.
 if (!(Test-Path $XC_EXE)) {
-    Invoke-WebRequest -Uri https://components.xamarin.com/submit/xpkg -OutFile (Join-Path $TOOLS_DIR "xpkg.zip")    
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [System.IO.Compression.ZipFile]::ExtractToDirectory((Join-Path $TOOLS_DIR "xpkg.zip"), ($TOOLS_DIR))   
+    Invoke-WebRequest -Uri https://www.dropbox.com/s/mpiesu3nfs5pguu/xamarin-component.exe?dl=1 -OutFile (Join-Path $TOOLS_DIR "xamarin-component.exe")        
+    #Invoke-WebRequest -Uri https://components.xamarin.com/submit/xpkg -OutFile (Join-Path $TOOLS_DIR "xpkg.zip")    
+    #Add-Type -AssemblyName System.IO.Compression.FileSystem
+    #[System.IO.Compression.ZipFile]::ExtractToDirectory((Join-Path $TOOLS_DIR "xpkg.zip"), ($TOOLS_DIR))   
 }
 
 # Restore tools from NuGet.
 Push-Location
 Set-Location $TOOLS_DIR
-Invoke-Expression "$NUGET3_EXE install -ExcludeVersion -Source https://api.nuget.org/v3/index.json"
+Invoke-Expression "$NUGET_EXE install -ExcludeVersion -Source https://www.nuget.org/api/v2"
 Pop-Location
 if ($LASTEXITCODE -ne 0)
 {
