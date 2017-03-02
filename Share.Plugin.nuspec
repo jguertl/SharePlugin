@@ -20,6 +20,7 @@
            </group>
        </dependencies>
         <releaseNotes>
+          6.1.0-beta: Android support 25.1.1, if you are using 23.3.0 please use 5.0+
        </releaseNotes>
        <summary>Share Plugin for Xamarin and Windows to share text, link, or open a browser.</summary>
        <tags>share, open url, clipboard, sfsafariwebviewcontroller, chrome custom tabs, share text, share link, browser, xamarin, pcl, xam.pcl, windows phone, winphone, wp8, android, xamarin.forms, ios</tags>
