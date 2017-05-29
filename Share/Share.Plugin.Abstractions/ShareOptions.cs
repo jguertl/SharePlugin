@@ -25,9 +25,8 @@ namespace Plugin.Share.Abstractions
 
         /// <summary>
         /// iOS only: Gets or sets the popover anchor rectangle.
-        /// If null (default) option is not used.
+        /// If null (default) the option is not used.
         /// </summary>
-        /// <value>The source object.</value>
         public ShareRect PopoverAnchorRect { get; set; } = null;
     }
 
