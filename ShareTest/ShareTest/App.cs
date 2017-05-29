@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Forms;
+using ShareTest.Extensions;
 
 namespace ShareTest
 {
@@ -58,9 +59,10 @@ namespace ShareTest
                 new ShareOptions
                 {
                     ChooserTitle = "Chooser Title",
-                    ExcludedUIActivityTypes = new [] { ShareUIActivityType.PostToFacebook }
+                    ExcludedUIActivityTypes = new[] { ShareUIActivityType.PostToFacebook },
+                    PopoverAnchorRect = button.GetScreenRect()
                 });
-                
+
             };
 
             button1.Clicked += (sender, args) =>
@@ -70,8 +72,11 @@ namespace ShareTest
                     Text = "MotzCod.es",
                     Title = "heckout my blog",
                     Url = "http://motzcod.es"
+                }, new ShareOptions
+                {
+                    PopoverAnchorRect = button1.GetScreenRect()
                 });
-                
+
             };
 
             button2.Clicked += (sender, args) =>
@@ -82,7 +87,7 @@ namespace ShareTest
             buttonShare.Clicked += (sender, args) =>
             {
                 var shareMessage = new ShareMessage();
-                var shareOptions = new ShareOptions();
+                var shareOptions = new ShareOptions { PopoverAnchorRect = buttonShare.GetScreenRect() };
 
                 if (switchTitle.IsToggled)
                     shareMessage.Title = "MotzCod.es";

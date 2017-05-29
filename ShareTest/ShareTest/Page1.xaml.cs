@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Plugin.Share.Abstractions;
 
 namespace ShareTest
 {
@@ -19,7 +20,7 @@ namespace ShareTest
                 CrossShare.Current.Share(new Plugin.Share.Abstractions.ShareMessage
                 {
                     Text = "Follow @JamesMontemagno on Twitter",
-                    Title = "Share"
+                    Title = "Share",
                 });
             };
 

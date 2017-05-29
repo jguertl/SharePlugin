@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UIKit;
+using CoreGraphics;
 
 namespace Plugin.Share
 {
@@ -130,6 +131,10 @@ namespace Plugin.Share
                     if (activityController.PopoverPresentationController != null)
                     {
                         activityController.PopoverPresentationController.SourceView = vc.View;
+                        var rect = options?.PopoverAnchorRect;
+                        if (rect != null) {
+                            activityController.PopoverPresentationController.SourceRect = new CGRect(rect.X, rect.Y, rect.Width, rect.Height);
+                        }
                     }
                 }
 
@@ -143,6 +148,7 @@ namespace Plugin.Share
                 return false;
             }
         }
+
 
         /// <summary>
         /// Gets the visible view controller.
