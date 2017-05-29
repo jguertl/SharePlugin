@@ -22,5 +22,12 @@ namespace Plugin.Share.Abstractions
         /// If null (default) the value of <see cref="Plugin.Share.ShareImplementation.ExcludedUIActivityTypes"/> is used.
         /// </summary>
         public ShareUIActivityType[] ExcludedUIActivityTypes { get; set; } = null;
+
+        /// <summary>
+        /// iOS only: Gets or sets the popover anchor rectangle.
+        /// If null (default) the option is not used.
+        /// </summary>
+        public ShareRect PopoverAnchorRect { get; set; } = null;
     }
+
 }
