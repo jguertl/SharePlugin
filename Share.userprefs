@@ -1,10 +1,12 @@
-﻿<Properties StartupItem="Share/Share.Plugin/Share.Plugin.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+﻿<Properties StartupConfiguration="{56A56F17-7DE1-4CA1-9617-BF32E971AC84}|Default">
   <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.Share.Plugin.Android PreferredExecutionTarget="Xamarin.Player.XamarinStudio.DefaultPlayerExecutionTarget" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="../xamarin-evolve-mobile/XamarinEvolve/XamarinEvolve.Clients.UI/Converters/DateConverters.cs" line="17" offsetX="712" offsetY="304" expression="value" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MultiItemStartupConfigurations />
 </Properties>

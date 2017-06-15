@@ -116,7 +116,9 @@
       <Link>CrossShare.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Properties\Share.Plugin.UWP.rd.xml" />
+    <EmbeddedResource Include="Properties\Share.Plugin.UWP.rd.xml">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Share.Plugin.Abstractions\Share.Plugin.Abstractions.csproj">
