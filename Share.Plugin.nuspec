@@ -14,7 +14,7 @@
          Share Plugin for Xamarin and Windows to share text, link, copy text to clipboard, or open a browser.
        </description>
        <dependencies>
-         <group targetFramework="MonoAndroid10">
+         <group targetFramework="MonoAndroid70">
                <dependency id="Xamarin.Android.Support.CustomTabs" version="25.1.1"/>
                <dependency id="Plugin.CurrentActivity" version="1.0.1"/>
            </group>
