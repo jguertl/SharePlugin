@@ -51,7 +51,7 @@
   </metadata>
   <files>
     <!--Core-->
-    <file src="Share\Share.Plugin\bin\Release\Plugin.Share.*" target="lib\netstandard1.0" />
+    <file src="Share\Share.Plugin\bin\Release\netstandard1.0\Plugin.Share.*" target="lib\netstandard1.0" />
 
 
     <!--Xamarin.Android-->
