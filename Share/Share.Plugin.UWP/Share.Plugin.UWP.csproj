@@ -109,18 +109,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Share.Plugin.WindowsPhone81\ShareImplementation.cs">
-      <Link>ShareImplementation.cs</Link>
-    </Compile>
     <Compile Include="..\Share.Plugin\CrossShare.cs">
       <Link>CrossShare.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Properties\Share.Plugin.UWP.rd.xml" />
+    <Compile Include="ShareImplementation.cs" />
+    <EmbeddedResource Include="Properties\Plugin.Share.rd.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Share.Plugin.Abstractions\Share.Plugin.Abstractions.csproj">
-      <Project>{6edb0588-ffc5-4ef5-8a99-9e241d0f878d}</Project>
+      <Project>{59b706e6-4b1d-415c-bdd0-da7aff4547c5}</Project>
       <Name>Share.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>

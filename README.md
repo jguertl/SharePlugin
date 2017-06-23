@@ -6,7 +6,6 @@ Simple way to share a message or link, copy text to clipboard, or open a browser
 
 * Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.Share/)
 * Install into your PCL project and Platform Specific projects
-* If you have upgraded your Android Support Libraries to 25.X please install and use the 6.0 pre-release of this package.
 
 Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj5weexcjk6g9?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/shareplugin)
 
@@ -16,14 +15,10 @@ I know you really want to upate the Custom Tabs NuGet for some reason, but don't
 **Platform Support**
 
 |Platform|Supported|Version|
-| ------------------- | :-----------: | :------------------: |
-|Xamarin.iOS|Yes|iOS 8+|
-|Xamarin.Android|Yes|API 14+|
-|Windows Phone Silverlight|Yes|8.0+|
-|Windows Phone RT|Yes|8.1+|
-|Windows Store RT|Yes|8.1+|
-|Windows 10 UWP|Yes|10+|
-|Xamarin.Mac|No||
+| ------------------- | :------------------: |
+|Xamarin.iOS|iOS 8+|
+|Xamarin.Android|API 14+|
+|Windows 10 UWP|10+|
 ### API Usage
 
 Call **CrossShare.Current** from any project or PCL to gain access to APIs.
