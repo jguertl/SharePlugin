@@ -6,6 +6,7 @@ Simple way to share a message or link, copy text to clipboard, or open a browser
 
 * Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.Share/)
 * Install into your PCL project and Platform Specific projects
+* If you have upgraded your Android Support Libraries to 25.X please install and use the 6.0 pre-release of this package.
 
 Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/xuonj5weexcjk6g9?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/shareplugin)
 

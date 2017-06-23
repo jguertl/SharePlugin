@@ -61,12 +61,12 @@
 
 
      <!--Xamarin.Android-->
-     <file src="Share\Share.Plugin.Android\bin\Release\Plugin.Share.dll" target="lib\MonoAndroid70\Plugin.Share.dll" />
-     <file src="Share\Share.Plugin.Android\bin\Release\Plugin.Share.xml" target="lib\MonoAndroid70\Plugin.Share.xml" />
-     <file src="Share\Share.Plugin.Android\bin\Release\Plugin.Share.pdb" target="lib\MonoAndroid70\Plugin.Share.pdb" />
-     <file src="Share\Share.Plugin.Abstractions\bin\Release\Plugin.Share.Abstractions.dll" target="lib\MonoAndroid70\Plugin.Share.Abstractions.dll" />
-     <file src="Share\Share.Plugin.Abstractions\bin\Release\Plugin.Share.Abstractions.xml" target="lib\MonoAndroid70\Plugin.Share.Abstractions.xml" />
-     <file src="Share\Share.Plugin.Abstractions\bin\Release\Plugin.Share.Abstractions.pdb" target="lib\MonoAndroid70\Plugin.Share.Abstractions.pdb" />
+     <file src="Share\Share.Plugin.Android\bin\Release\Plugin.Share.dll" target="lib\MonoAndroid10\Plugin.Share.dll" />
+     <file src="Share\Share.Plugin.Android\bin\Release\Plugin.Share.xml" target="lib\MonoAndroid10\Plugin.Share.xml" />
+     <file src="Share\Share.Plugin.Android\bin\Release\Plugin.Share.pdb" target="lib\MonoAndroid10\Plugin.Share.pdb" />
+     <file src="Share\Share.Plugin.Abstractions\bin\Release\Plugin.Share.Abstractions.dll" target="lib\MonoAndroid10\Plugin.Share.Abstractions.dll" />
+     <file src="Share\Share.Plugin.Abstractions\bin\Release\Plugin.Share.Abstractions.xml" target="lib\MonoAndroid10\Plugin.Share.Abstractions.xml" />
+     <file src="Share\Share.Plugin.Abstractions\bin\Release\Plugin.Share.Abstractions.pdb" target="lib\MonoAndroid10\Plugin.Share.Abstractions.pdb" />
      
      <!--Xamarin.iOS Unified-->
      <file src="Share\Share.Plugin.iOSUnified\bin\iPhone\Release\Plugin.Share.dll" target="lib\Xamarin.iOS10\Plugin.Share.dll" />
