@@ -9,5 +9,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard1.0\Plugin.Share.Abstractions.xml</DocumentationFile>
   </PropertyGroup>
-
 </Project>

@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata minClientVersion="2.8.1">
-    <id>Plugin.Share</id>
-    <version>$version$</version>
-    <title>Share Plugin for Xamarin and Windows</title>
-    <authors>Jakob Gürtl,James Montemagno</authors>
-    <owners>Jakob Gürtl,JamesMontemagno</owners>
-    <iconUrl>http://refractored.com/images/plugin_share.png</iconUrl>
-    <licenseUrl>https://github.com/jguertl/SharePlugin/blob/master/LICENSE.md</licenseUrl>
-    <projectUrl>https://github.com/jguertl/SharePlugin</projectUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>
-      Share Plugin for Xamarin and Windows to share text, link, copy text to clipboard, or open a browser.
-    </description>
-    <dependencies>
-      <group targetFramework="net">
+   <metadata minClientVersion="2.8.1">
+       <id>Plugin.Share</id>
+       <version>$version$</version>
+       <title>Share Plugin for Xamarin and Windows</title>
+       <authors>Jakob Gürtl,James Montemagno</authors>
+       <owners>Jakob Gürtl,JamesMontemagno</owners>
+     <iconUrl>http://refractored.com/images/plugin_share.png</iconUrl>
+     <licenseUrl>https://github.com/jguertl/SharePlugin/blob/master/LICENSE.md</licenseUrl>
+	     <projectUrl>https://github.com/jguertl/SharePlugin</projectUrl>
+       <requireLicenseAcceptance>false</requireLicenseAcceptance>
+       <description>
+         Share Plugin for Xamarin and Windows to share text, link, copy text to clipboard, or open a browser.
+       </description>
+       <dependencies>
+        <group targetFramework="net">
       </group>
       <group targetFramework="win">
       </group>
@@ -62,7 +62,6 @@
 
     <!--UWP-->
     <file src="Share\Share.Plugin.UWP\bin\Release\Plugin.Share.*" target="lib\UAP10" />
-
 
   </files>
 </package>

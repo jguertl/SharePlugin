@@ -4,6 +4,7 @@
     <TargetFramework>netstandard1.0</TargetFramework>
     <AssemblyName>Plugin.Share</AssemblyName>
     <RootNamespace>Plugin.Share</RootNamespace>
+
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -13,5 +14,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Share.Plugin.Abstractions\Share.Plugin.Abstractions.csproj" />
   </ItemGroup>
-
 </Project>
