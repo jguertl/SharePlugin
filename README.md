@@ -14,11 +14,20 @@ I know you really want to upate the Custom Tabs NuGet for some reason, but don't
 
 **Platform Support**
 
-|Platform|Supported|Version|
+|Platform|Version|
 | ------------------- | :------------------: |
 |Xamarin.iOS|iOS 8+|
 |Xamarin.Android|API 14+|
 |Windows 10 UWP|10+|
+
+## News
+- Plugins have moved to .NET Standard and have some important changes! Please read my blog:
+http://motzcod.es/post/162402194007/plugins-for-xamarin-go-dotnet-standard
+
+
+## Android 
+You must set your app to compile against API 25 or higher and be able to install the latest android support libraries.
+
 ### API Usage
 
 Call **CrossShare.Current** from any project or PCL to gain access to APIs.
