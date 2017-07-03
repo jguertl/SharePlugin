@@ -128,7 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Share\Share.Plugin.Abstractions\Share.Plugin.Abstractions.csproj">
-      <Project>{6edb0588-ffc5-4ef5-8a99-9e241d0f878d}</Project>
+      <Project>{1595236a-04fc-4d89-99c2-ceb1d7f0b87e}</Project>
       <Name>Share.Plugin.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Share\Share.Plugin.UWP\Share.Plugin.UWP.csproj">

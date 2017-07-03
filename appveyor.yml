@@ -1,4 +1,5 @@
-version: 7.0.0.{build}-beta
+version: 7.0.0.{build}-alpha
+image: Visual Studio 2017
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -13,7 +14,6 @@ install:
   - echo y | "C:\Program Files (x86)\Android\android-sdk\tools\android.bat" update sdk -u -a -t android-15
 build_script:
 - cmd: >-
-
     powershell .\bootstrapper.ps1 -Target Default -Verbosity diagnostic
 artifacts:
 - path: ./Build/nuget/*.nupkg
