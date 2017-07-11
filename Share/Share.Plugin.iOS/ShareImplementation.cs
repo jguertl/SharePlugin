@@ -144,37 +144,42 @@ namespace Plugin.Share
             }
         }
 
-        /// <summary>
-        /// Gets the visible view controller.
-        /// </summary>
-        /// <returns>The visible view controller.</returns>
-        UIViewController GetVisibleViewController(UIViewController controller = null)
-        {
-            controller = controller ?? UIApplication.SharedApplication.KeyWindow.RootViewController;
+		/// <summary>
+		/// Gets the visible view controller.
+		/// </summary>
+		/// <returns>The visible view controller.</returns>
+		UIViewController GetVisibleViewController()
+		{
+			UIViewController viewController = null;
+			var window = UIApplication.SharedApplication.KeyWindow;
 
-            if (controller.PresentedViewController == null)
-                return controller;
 
-            if (controller.PresentedViewController is UINavigationController)
-            {
-                return ((UINavigationController)controller.PresentedViewController).VisibleViewController;
-            }
+			if (window != null && window.WindowLevel == UIWindowLevel.Normal)
+				viewController = window.RootViewController;
 
-            if (controller.PresentedViewController is UITabBarController)
-            {
-                return ((UITabBarController)controller.PresentedViewController).SelectedViewController;
-            }
+			if (viewController == null)
+			{
+				window = UIApplication.SharedApplication.Windows.OrderByDescending(w => w.WindowLevel).FirstOrDefault(w => w.RootViewController != null && w.WindowLevel == UIWindowLevel.Normal);
+				if (window == null)
+					throw new InvalidOperationException("Could not find current view controller");
+				else
+					viewController = window.RootViewController;
+			}
 
-            return GetVisibleViewController(controller.PresentedViewController);
-        }
+			while (viewController.PresentedViewController != null)
+				viewController = viewController.PresentedViewController;
 
-        /// <summary>
-        /// Converts the <see cref="ShareUIActivityType"/> to its native representation.
-        /// Returns null if the activity type is invalid or not supported on the current platform.
-        /// </summary>
-        /// <param name="type">The activity type</param>
-        /// <returns>The native representation of the activity type or null</returns>
-        NSString GetUIActivityType(ShareUIActivityType type)
+
+			return viewController;
+		}
+
+		/// <summary>
+		/// Converts the <see cref="ShareUIActivityType"/> to its native representation.
+		/// Returns null if the activity type is invalid or not supported on the current platform.
+		/// </summary>
+		/// <param name="type">The activity type</param>
+		/// <returns>The native representation of the activity type or null</returns>
+		NSString GetUIActivityType(ShareUIActivityType type)
         {
             switch (type)
             {
