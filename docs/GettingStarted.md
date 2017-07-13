@@ -32,4 +32,10 @@ public void DoPluginStuff()
 ```
 
 
+## Additional Setup
+
+#### Android 
+You must set your app to compile against API 25 or higher and be able to install the latest Android support libraries. I have written a [nifty blog to guide you through this](https://blog.xamarin.com/mastering-android-support-libraries/).
+
+
 <= Back to [Table of Contents](README.md)

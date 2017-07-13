@@ -1,93 +1,103 @@
-## Checking Connectivity
-There are a few properties that can be used to easily check connection information using the plugin.
-
-### Check Connectivity
-`IsConnected`: The easiest and most common use case of simply chcking if there is interent access:
+## Sharing Messages/Text and Links
+This is the main use case for this library and gives you the ability to easily bring up the share dialoges for each platform to share text and url links.
 
 ```csharp
 /// <summary>
-/// Gets if there is an active internet connection
+/// Share a message with compatible services
 /// </summary>
-bool IsConnected { get; }
+/// <param name="message">Message to share</param>
+/// <param name="options">Platform specific options</param>
+/// <returns>True if the operation was successful, false otherwise</returns>
+Task<bool> Share(ShareMessage message, ShareOptions options = null);
 ```
 
-Example:
-```csharp
-public async Task<string> MakeWebRequest()
-{
-    if(!CrossConnectivity.Current.IsConnected)
-    {
-      //You are offline, notify the user
-      return null;
-    }
+The `ShareMessage` is required and determines what can be shared. If you fill out the `Url` field then the link share sheet will appear. It will return a `bool` to determine if the share was successfully brought up or not.
 
-    //Make web request here
-}
-```
-
-### Check Type of Connection
-Easily check what type of internet connection is currently active.
 
 ```csharp
 /// <summary>
-/// Gets the list of all active connection types.
+/// Message object to share with compatible services
 /// </summary>
-IEnumerable<ConnectionType> ConnectionTypes { get; }
-```
-
-Example:
-```csharp
-public async Task<string> MakeWebRequestWifiOnly()
+public class ShareMessage
 {
-    var wifi = Plugin.Connectivity.Abstractions.ConnectionType.WiFi;
-    var connectionTypes = CrossConnectivity.Current.ConnectionTypes;
-    if(!connectionTypes.Contains(wifi))
-    {
-      //You do not have wifi
-      return null;
-    }
+    /// <summary>
+    /// Gets or sets the title of the message. Used as email subject if sharing with mail apps.
+    /// </summary>
+    public string Title { get; set; }
 
-    //Make web request here
+    /// <summary>
+    /// Gets or sets the text of the message.
+    /// </summary>
+    public string Text { get; set; }
+
+    /// <summary>
+    /// Gets or sets the link to include with the message.
+    /// </summary>
+    public string Url { get; set; }
 }
 ```
 
-### Speed of Connection
+Example:
 
-You can query all bandwidths of the active connections in Bits Per Second.
+```csharp
+public void ShareBlog()
+{
+    if(!CrossShare.IsSupported)
+        return;
+
+    CrossShare.Current.Share(new ShareOptions
+    {
+       Title = "Motz Cod.es",
+       Message = "Checkout Motz Cod.es! for all sorts of goodies",
+       Url = "http://motzcod.es"
+    });
+}
+```
+
+Since there is a bit more complexity on specific platforms there are additional options that can be passed in:
 
 ```csharp
 /// <summary>
-/// Retrieves a list of available bandwidths for the platform.
-/// Only active connections.
+/// Platform specific Share Options
 /// </summary>
-IEnumerable<UInt64> Bandwidths { get; }
-```
-
-Example:
-```csharp
-public async Task<string> MakeWebRequestOneMeg()
+public class ShareOptions
 {
-    var optimalSpeed = 1000000; //1Mbps
-    var speeds = CrossConnectivity.Current.Bandwidths;
+    /// <summary>
+    /// Android: Gets or sets the title of the app chooser popup.
+    /// If null (default) the system default title is used.
+    /// </summary>
+    public string ChooserTitle { get; set; } = null;
 
-    //If on iOS or none were returned
-    if(speeds.Length == 0)
-      return null;
-
-    if(!connectionTypes.Any(speed => speed > optimalSpeed))
-    {
-      //You do not have wifi
-      return null;
-    }
-
-    //Make web request here
+    /// <summary>
+    /// iOS: Gets or sets the UIActivityTypes that should not be displayed.
+    /// If null (default) the value of <see cref="Plugin.Share.ShareImplementation.ExcludedUIActivityTypes"/> is used.
+    /// </summary>
+    public ShareUIActivityType[] ExcludedUIActivityTypes { get; set; } = null;
 }
 ```
 
-**Platform Tweaks**:
-* Apple Platforms: Bandwidths are not supported and will always return an empty list.
-* Android: In releases earlier than 3.0.2 this was returned as Mbps.
-* Android: Only returns bandwidth of WiFi connections. For all others you can check the 
+Example:
+
+```csharp
+public void ShareBlog()
+{
+    if(!CrossShare.IsSupported)
+        return;
+
+    CrossShare.Current.Share(new ShareOptions
+    {
+       Title = "Motz Cod.es",
+       Message = "Checkout Motz Cod.es! for all sorts of goodies",
+       Url = "http://motzcod.es"
+    },
+    new ShareOptions
+    {
+        ChooserTitle = "Share Blog",
+        ExcludedUIActivityTypes  = new [] { ShareUIActivityType.PostToFacebook } 
+    });
+}
+```
+
 
 <= Back to [Table of Contents](README.md)
 

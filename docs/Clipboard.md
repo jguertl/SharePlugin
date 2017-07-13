@@ -13,7 +13,6 @@ bool SupportsClipboard { get; }
 ```
 
 
-
 ### Copy Text to Clipboard
 After you check to see if the device and OS supports the clipboard, you can copy text to it. Additionally, Android can display a user-visible label for the clip data.
 
