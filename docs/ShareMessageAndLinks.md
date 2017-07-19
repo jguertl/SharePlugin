@@ -45,7 +45,7 @@ public void ShareBlog()
     if(!CrossShare.IsSupported)
         return;
 
-    CrossShare.Current.Share(new ShareOptions
+    CrossShare.Current.Share(new ShareMessage
     {
        Title = "Motz Cod.es",
        Message = "Checkout Motz Cod.es! for all sorts of goodies",
@@ -84,7 +84,7 @@ public void ShareBlog()
     if(!CrossShare.IsSupported)
         return;
 
-    CrossShare.Current.Share(new ShareOptions
+    CrossShare.Current.Share(new ShareMessage
     {
        Title = "Motz Cod.es",
        Message = "Checkout Motz Cod.es! for all sorts of goodies",
