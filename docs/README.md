@@ -4,7 +4,7 @@ Here you will find detailed documentation on setting up and using the Share Plug
 
 ### Table of Contents
 * [Getting Started](GettingStarted.md)
-* [Share Message and Linsk](ShareMessageAndLinks.md)
+* [Share Message and Links](ShareMessageAndLinks.md)
 * [Open Browser](OpenBrowser.md)
 * [Clipboard Access](Clipboard.md)
 * [Architecture](Architecture.md)
