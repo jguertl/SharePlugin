@@ -1,5 +1,5 @@
 ## Open a Browser
-Often you may need to launch a website or additiona web content from your application such as showing a privacy policy or visiting an external blog. That is where OpenBrowser comes in and is fully optimzed to take advantage of Chrome Custom Tabs and SafariWebViewController to keep your users in your app.
+Often you may need to launch a website or additional web content from your application such as showing a privacy policy or visiting an external blog. That is where OpenBrowser comes in and is fully optimized to take advantage of Chrome Custom Tabs and SafariWebViewController to keep your users in your app.
 
 ```csharp
 /// <summary>
