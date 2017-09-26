@@ -4,7 +4,7 @@ Simple way to share a message or link, copy text to clipboard, or open a browser
 
 ### Documentation
 
-Get strted by reading through the [Share Plugin documentation](docs)
+Get started by reading through the [Share Plugin documentation](docs)
 
 ### NuGet:
 * Available on NuGet: https://www.nuget.org/packages/Plugin.Share/ [![NuGet](https://img.shields.io/nuget/v/Plugin.Share.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.Share/)
