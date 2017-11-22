@@ -22,5 +22,7 @@ namespace Plugin.Share.Abstractions
         /// If null (default) the value of <see cref="Plugin.Share.ShareImplementation.ExcludedUIActivityTypes"/> is used.
         /// </summary>
         public ShareUIActivityType[] ExcludedUIActivityTypes { get; set; } = null;
+
+	public ShareAppControlType ExcludedAppControlTypes { get; set; } = 0;
     }
 }
