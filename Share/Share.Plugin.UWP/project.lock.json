@@ -1,7 +1,7 @@
 {
-  "version": 2,
+  "version": 3,
   "targets": {
-    "UAP,Version=v10.0": {
+    "UAP,Version=v10.0.10240": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -2370,7 +2370,7 @@
         }
       }
     },
-    "UAP,Version=v10.0/win10-arm": {
+    "UAP,Version=v10.0.10240/win10-arm": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -4769,7 +4769,7 @@
         }
       }
     },
-    "UAP,Version=v10.0/win10-arm-aot": {
+    "UAP,Version=v10.0.10240/win10-arm-aot": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -5454,9 +5454,6 @@
       },
       "runtime.win10-arm-aot.runtime.native.System.IO.Compression/4.0.1": {
         "type": "package",
-        "compile": {
-          "runtimes/win10-arm-aot/lib/netcore50/_._": {}
-        },
         "runtime": {
           "runtimes/win10-arm-aot/lib/netcore50/clrcompression.dll": {}
         }
@@ -7207,7 +7204,7 @@
         }
       }
     },
-    "UAP,Version=v10.0/win10-x64": {
+    "UAP,Version=v10.0.10240/win10-x64": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -9615,7 +9612,7 @@
         }
       }
     },
-    "UAP,Version=v10.0/win10-x64-aot": {
+    "UAP,Version=v10.0.10240/win10-x64-aot": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -10303,9 +10300,6 @@
       },
       "runtime.win10-x64-aot.runtime.native.System.IO.Compression/4.0.1": {
         "type": "package",
-        "compile": {
-          "runtimes/win10-x64-aot/lib/netcore50/_._": {}
-        },
         "runtime": {
           "runtimes/win10-x64-aot/lib/netcore50/clrcompression.dll": {}
         }
@@ -12062,7 +12056,7 @@
         }
       }
     },
-    "UAP,Version=v10.0/win10-x86": {
+    "UAP,Version=v10.0.10240/win10-x86": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -14470,7 +14464,7 @@
         }
       }
     },
-    "UAP,Version=v10.0/win10-x86-aot": {
+    "UAP,Version=v10.0.10240/win10-x86-aot": {
       "Microsoft.CSharp/4.0.1": {
         "type": "package",
         "dependencies": {
@@ -15158,9 +15152,6 @@
       },
       "runtime.win10-x86-aot.runtime.native.System.IO.Compression/4.0.1": {
         "type": "package",
-        "compile": {
-          "runtimes/win10-x86-aot/lib/netcore50/_._": {}
-        },
         "runtime": {
           "runtimes/win10-x86-aot/lib/netcore50/clrcompression.dll": {}
         }
@@ -23410,10 +23401,11 @@
     "": [
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.2.3"
     ],
-    "UAP,Version=v10.0": []
+    "UAP,Version=v10.0.10240": []
   },
   "packageFolders": {
-    "C:\\Users\\James Montemagno\\.nuget\\packages\\": {}
+    "C:\\Users\\James Montemagno\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {}
   },
   "project": {
     "restore": {
@@ -23421,9 +23413,27 @@
       "projectName": "Share.Plugin.UWP",
       "projectPath": "C:\\GitHub\\SharePlugin\\Share\\Share.Plugin.UWP\\Share.Plugin.UWP.csproj",
       "projectJsonPath": "C:\\GitHub\\SharePlugin\\Share\\Share.Plugin.UWP\\project.json",
+      "packagesPath": "C:\\Users\\James Montemagno\\.nuget\\packages\\",
+      "outputPath": "C:\\GitHub\\SharePlugin\\Share\\Share.Plugin.UWP\\obj\\",
       "projectStyle": "ProjectJson",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\James Montemagno\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\James Montemagno\\.dotnet\\NuGetFallbackFolder": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://www.myget.org/F/aad-clients-nightly/api/v3/index.json": {},
+        "https://www.myget.org/F/xamarinforms-ci/api/v2": {},
+        "https://www.myget.org/F/xamarinforms-dev/api/v3/index.json": {}
+      },
       "frameworks": {
-        "uap10.0": {
+        "uap10.0.10240": {
           "projectReferences": {
             "C:\\GitHub\\SharePlugin\\Share\\Share.Plugin.Abstractions\\Share.Plugin.Abstractions.csproj": {
               "projectPath": "C:\\GitHub\\SharePlugin\\Share\\Share.Plugin.Abstractions\\Share.Plugin.Abstractions.csproj"
@@ -23436,7 +23446,7 @@
       "Microsoft.NETCore.UniversalWindowsPlatform": "[5.2.3, )"
     },
     "frameworks": {
-      "uap10.0": {}
+      "uap10.0.10240": {}
     },
     "runtimes": {
       "win10-arm": {

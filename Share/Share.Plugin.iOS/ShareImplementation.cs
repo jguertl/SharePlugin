@@ -1,3 +1,4 @@
+using CoreGraphics;
 using Foundation;
 using Plugin.Share.Abstractions;
 using SafariServices;
@@ -127,10 +128,16 @@ namespace Plugin.Share
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
                 {
-                    if (activityController.PopoverPresentationController != null)
-                    {
-                        activityController.PopoverPresentationController.SourceView = vc.View;
-                    }
+					if (activityController.PopoverPresentationController != null)
+					{
+						activityController.PopoverPresentationController.SourceView = vc.View;
+
+						var rect = options?.PopoverAnchorRectangle;
+						if (rect != null)
+						{
+							activityController.PopoverPresentationController.SourceRect = new CGRect(rect.X, rect.Y, rect.Width, rect.Height);
+						}
+					}
                 }
 
                 await vc.PresentViewControllerAsync(activityController, true);
