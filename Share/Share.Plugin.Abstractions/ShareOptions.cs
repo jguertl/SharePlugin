@@ -17,16 +17,11 @@ namespace Plugin.Share.Abstractions
 		/// </summary>
 		public string ChooserTitle { get; set; } = null;
 
-    /// <summary>
-    /// iOS: Gets or sets the UIActivityTypes that should not be displayed.
-    /// If null (default) the value of <see cref="Plugin.Share.ShareImplementation.ExcludedUIActivityTypes"/> is used.
-    /// </summary>
-    public ShareUIActivityType[] ExcludedUIActivityTypes { get; set; } = null;
 
-     /// <summary>
-    /// Tizen: Exluced App Types
-    /// </summary>
-	  public ShareAppControlType ExcludedAppControlTypes { get; set; } = 0;
+		/// <summary>
+		/// Tizen: Excluded App Types
+		/// </summary>
+		public ShareAppControlType ExcludedAppControlTypes { get; set; } = 0;
 
 		/// <summary>
 		/// iOS: Gets or sets the UIActivityTypes that should not be displayed.
