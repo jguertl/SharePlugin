@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ShareTest.Page1">
   <StackLayout>
-    <Button x:Name="ButtonShare" Text="Share"/>
+		<Entry x:Name="EntryTest" Placeholder="Url To Test"/>
+		<Button x:Name="ButtonTest" Text="Test"/>
+	  
+		<Button Margin="0,20,0,0" x:Name="ButtonShare" Text="Share"/>
     <Button x:Name="ButtonBrowser" Text="Browser"/>
   </StackLayout>
 </ContentPage>

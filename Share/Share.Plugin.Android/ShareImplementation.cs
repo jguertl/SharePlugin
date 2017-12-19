@@ -134,7 +134,23 @@ namespace Plugin.Share
 		/// </summary>
 		/// <param name="url">Url to check</param>
 		/// <returns>True if it can</returns>
-		public bool CanOpenUrl(string url) => true;
+		public bool CanOpenUrl(string url)
+		{
+			try
+			{
+				var context = CrossCurrentActivity.Current.Activity ?? Application.Context;
+				var intent = new Intent(Intent.ActionView);
+				intent.SetData(Android.Net.Uri.Parse(url));
+
+				intent.SetFlags(ActivityFlags.ClearTop);
+				intent.SetFlags(ActivityFlags.NewTask);
+				return intent.ResolveActivity(context.PackageManager) != null;
+			}
+			catch (Exception ex)
+			{
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Gets if cliboard is supported

@@ -31,6 +31,11 @@ namespace ShareTest
                     
                 });
             };
-        }
+
+			ButtonTest.Clicked += delegate
+			{
+				DisplayAlert("Test Result", CrossShare.Current.CanOpenUrl(EntryTest.Text).ToString(), "OK");
+			};
+		}
     }
 }
