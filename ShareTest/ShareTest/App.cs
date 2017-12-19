@@ -58,8 +58,9 @@ namespace ShareTest
                 new ShareOptions
                 {
                     ChooserTitle = "Chooser Title",
-                    ExcludedUIActivityTypes = new [] { ShareUIActivityType.PostToFacebook }
-                });
+                    ExcludedUIActivityTypes = new [] { ShareUIActivityType.PostToFacebook },
+					PopoverAnchorRectangle = button.GetScreenRect()
+				});
                 
             };
 

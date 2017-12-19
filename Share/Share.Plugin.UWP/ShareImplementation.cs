@@ -123,10 +123,18 @@ namespace Plugin.Share
 #endif
         }
 
-        /// <summary>
-        /// Gets if cliboard is supported
-        /// </summary>
-        public bool SupportsClipboard
+
+		/// <summary>
+		/// Checks if the url can be opened
+		/// </summary>
+		/// <param name="url">Url to check</param>
+		/// <returns>True if it can</returns>
+		public bool CanOpenUrl(string url) => true;
+
+		/// <summary>
+		/// Gets if cliboard is supported
+		/// </summary>
+		public bool SupportsClipboard
         {
 #if WINDOWS_UWP || WINDOWS_APP
             get { return true; }

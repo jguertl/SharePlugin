@@ -1,3 +1,4 @@
+using CoreGraphics;
 using Foundation;
 using Plugin.Share.Abstractions;
 using SafariServices;
@@ -127,10 +128,16 @@ namespace Plugin.Share
 
                 if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
                 {
-                    if (activityController.PopoverPresentationController != null)
-                    {
-                        activityController.PopoverPresentationController.SourceView = vc.View;
-                    }
+					if (activityController.PopoverPresentationController != null)
+					{
+						activityController.PopoverPresentationController.SourceView = vc.View;
+
+						var rect = options?.PopoverAnchorRectangle;
+						if (rect != null)
+						{
+							activityController.PopoverPresentationController.SourceRect = new CGRect(rect.X, rect.Y, rect.Width, rect.Height);
+						}
+					}
                 }
 
                 await vc.PresentViewControllerAsync(activityController, true);
@@ -242,9 +249,26 @@ namespace Plugin.Share
             }
         }
 
-        /// <summary>
-        /// Gets if cliboard is supported
-        /// </summary>
-        public bool SupportsClipboard => true;
+		/// <summary>
+		/// Checks if the url can be opened
+		/// </summary>
+		/// <param name="url">Url to check</param>
+		/// <returns>True if it can</returns>
+		public bool CanOpenUrl(string url)
+		{
+			try
+			{
+				return UIApplication.SharedApplication.OpenUrl(NSUrl.FromString(url));
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets if cliboard is supported
+		/// </summary>
+		public bool SupportsClipboard => true;
     }
 }
