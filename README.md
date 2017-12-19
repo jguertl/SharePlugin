@@ -21,6 +21,7 @@ Get started by reading through the [Share Plugin documentation](docs)
 |Xamarin.iOS|iOS 8+|
 |Xamarin.Android|API 14+|
 |Windows 10 UWP|10+|
+|Tizen|4.0+|
 
 #### License
 Licensed under MIT license
