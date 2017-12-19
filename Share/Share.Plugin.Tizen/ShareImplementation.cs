@@ -142,6 +142,8 @@ namespace Plugin.Share
 			return Task.FromResult(false);
 		}
 
+		public bool CanOpenUrl(string url) => true;
+
 		/// <summary>
 		/// Gets if cliboard is supported
 		/// </summary>
