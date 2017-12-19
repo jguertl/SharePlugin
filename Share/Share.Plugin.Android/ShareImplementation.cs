@@ -129,9 +129,16 @@ namespace Plugin.Share
             }
         }
 
-        /// <summary>
-        /// Gets if cliboard is supported
-        /// </summary>
-        public bool SupportsClipboard => true;
+		/// <summary>
+		/// Checks if the url can be opened
+		/// </summary>
+		/// <param name="url">Url to check</param>
+		/// <returns>True if it can</returns>
+		public bool CanOpenUrl(string url) => true;
+
+		/// <summary>
+		/// Gets if cliboard is supported
+		/// </summary>
+		public bool SupportsClipboard => true;
     }
 }
