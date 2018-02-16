@@ -19,7 +19,7 @@ namespace Plugin.Share
         /// <summary>
         /// Gets or sets the UIActivityTypes that should not be displayed.
         /// </summary>
-        public static List<NSString> ExcludedUIActivityTypes { get; set; } = new List<NSString> { UIActivityType.PostToFacebook };
+        public static List<NSString> ExcludedUIActivityTypes { get; set; } = new List<NSString> ();
 
         /// <summary>
         /// Open a browser to a specific url
