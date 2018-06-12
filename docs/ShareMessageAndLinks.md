@@ -87,7 +87,7 @@ public void ShareBlog()
     CrossShare.Current.Share(new ShareMessage
     {
        Title = "Motz Cod.es",
-       Message = "Checkout Motz Cod.es! for all sorts of goodies",
+       Text = "Checkout Motz Cod.es! for all sorts of goodies",
        Url = "http://motzcod.es"
     },
     new ShareOptions
