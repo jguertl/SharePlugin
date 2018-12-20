@@ -2,6 +2,11 @@
 
 Simple way to share a message or link, copy text to clipboard, or open a browser in any Xamarin or Windows app.
 
+### Library Is Deprecated
+
+With the release of [Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/) this library is now officially deprecated and will not receive any more updates or support. All issues will be closed automatically. Please upgrade to [Xamarin.Essentials](https://docs.microsoft.com/en-us/xamarin/essentials/) as it include Share, Clipboard, Browser, and TONS more APIs.
+
+
 ### Documentation
 
 Get started by reading through the [Share Plugin documentation](docs)
